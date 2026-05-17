@@ -1,0 +1,83 @@
+name: gems
+description: "GEMS — Güclü Elektromühərriklərin Monitorinqi və Sınağı"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Управление состоянием
+  provider: ^6.1.2
+
+  # База данных SQLite
+  sqflite_common_ffi: ^2.3.4+4
+  sqflite: ^2.4.1
+
+  # Хеширование паролей
+  crypto: ^3.0.6
+
+  # Локальные настройки
+  shared_preferences: ^2.3.5
+
+  # Управление окном
+  window_manager: ^0.4.3
+
+  # Пути файловой системы
+  path_provider: ^2.1.5
+  path: ^1.9.1
+
+  # Иконки
+  flutter_svg: ^2.0.16
+
+  # Анимации
+  flutter_animate: ^4.5.2
+
+  # Локализация Flutter (Material, Cupertino, Widgets делегаты)
+  flutter_localizations:
+    sdk: flutter
+
+  # Утилиты
+  uuid: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/translations/en.json
+    - assets/translations/az.json
+    - assets/translations/ru.json
+    - assets/images/
+    - assets/images/flags/az.webp
+    - assets/images/flags/en.webp
+    - assets/images/flags/ru.webp
+
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf
+        - asset: assets/fonts/NotoSans-Italic.ttf
+          style: italic
+        - asset: assets/fonts/NotoSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSans-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/NotoSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSans-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/NotoSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/NotoSans-BoldItalic.ttf
+          weight: 700
+          style: italic
