@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-/// Тёмная тема GEMS
+/// Тёмная тема AMOTES
 ThemeData buildDarkTheme() {
   const colorScheme = ColorScheme(
     brightness: Brightness.dark,

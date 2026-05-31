@@ -10,6 +10,7 @@ import '../../shared/providers/auth_provider.dart';
 import '../../shared/providers/locale_provider.dart';
 import '../../shared/providers/theme_provider.dart';
 import '../../shared/widgets/app_header.dart';
+import '../user_management/audit_log_section.dart';
 import '../user_management/user_management_section.dart';
 
 /// Экран настроек с двумя разделами: Общие и Пользователи (только ADMIN)
@@ -47,7 +48,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               duration: Duration(milliseconds: kAnimationDurationMs),
               child: _selectedIndex == 0
                   ? const _GeneralSection(key: ValueKey('general'))
-                  : const UserManagementSection(key: ValueKey('users')),
+                  : _selectedIndex == 1
+                      ? const UserManagementSection(key: ValueKey('users'))
+                      : const AuditLogSection(key: ValueKey('audit')),
             ),
           ),
         ],
@@ -125,6 +128,13 @@ class _SettingsSidebar extends StatelessWidget {
               label: AppLocalizations.of(context).tr('settings_users'),
               selected: selectedIndex == 1,
               onTap: () => onSelect(1),
+            ),
+            const SizedBox(height: 4),
+            _SidebarItem(
+              icon: Icons.history_rounded,
+              label: AppLocalizations.of(context).tr('settings_audit'),
+              selected: selectedIndex == 2,
+              onTap: () => onSelect(2),
             ),
           ],
         ],

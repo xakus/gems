@@ -66,6 +66,8 @@ class AuthService {
     required String lastName,
     required String username,
     required UserRole role,
+    required int performerId,
+    required String performerName,
     required UserRole requesterRole,
     String? tempPassword,
   }) async {
@@ -87,7 +89,12 @@ class AuthService {
       updatedAt: now,
     );
 
-    final created = await _userRepo.create(user, requesterRole: requesterRole);
+    final created = await _userRepo.create(
+      user,
+      performerId: performerId,
+      performerName: performerName,
+      requesterRole: requesterRole,
+    );
     await _settingsRepo.getByUserId(created.id!); // создаёт дефолтные настройки
     return (user: created, tempPassword: pass);
   }
@@ -95,6 +102,8 @@ class AuthService {
   /// Сбрасывает пароль пользователя на новый временный.
   Future<String> resetUserPassword({
     required int targetUserId,
+    required int performerId,
+    required String performerName,
     required UserRole requesterRole,
   }) async {
     final tempPass = TempPasswordGenerator.generate();
@@ -106,6 +115,8 @@ class AuthService {
       newHash: hash,
       newSalt: salt,
       tempPassword: tempPass,
+      requesterUserId: performerId,
+      requesterName: performerName,
       requesterRole: requesterRole,
     );
     return tempPass;

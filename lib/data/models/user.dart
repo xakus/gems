@@ -25,6 +25,13 @@ class User {
   final UserRole role;
   final bool isActive;
   final bool mustChangePassword;
+
+  /// true — пользователь мягко удалён и не отображается в системе
+  final bool isDeleted;
+
+  /// Дата мягкого удаления (null если не удалён)
+  final DateTime? deletedAt;
+
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -38,6 +45,8 @@ class User {
     required this.role,
     this.isActive = true,
     this.mustChangePassword = true,
+    this.isDeleted = false,
+    this.deletedAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -57,6 +66,10 @@ class User {
       role: UserRole.fromString(map['role'] as String),
       isActive: (map['is_active'] as int) == 1,
       mustChangePassword: (map['must_change_password'] as int) == 1,
+      isDeleted: (map['is_deleted'] as int? ?? 0) == 1,
+      deletedAt: map['deleted_at'] != null
+          ? DateTime.parse(map['deleted_at'] as String)
+          : null,
       createdAt: DateTime.parse(map['created_at'] as String),
       updatedAt: DateTime.parse(map['updated_at'] as String),
     );
@@ -74,6 +87,8 @@ class User {
       'role': role.toDbString(),
       'is_active': isActive ? 1 : 0,
       'must_change_password': mustChangePassword ? 1 : 0,
+      'is_deleted': isDeleted ? 1 : 0,
+      'deleted_at': deletedAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -90,6 +105,8 @@ class User {
     UserRole? role,
     bool? isActive,
     bool? mustChangePassword,
+    bool? isDeleted,
+    DateTime? deletedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -103,6 +120,8 @@ class User {
       role: role ?? this.role,
       isActive: isActive ?? this.isActive,
       mustChangePassword: mustChangePassword ?? this.mustChangePassword,
+      isDeleted: isDeleted ?? this.isDeleted,
+      deletedAt: deletedAt ?? this.deletedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

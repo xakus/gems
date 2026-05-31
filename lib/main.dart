@@ -26,10 +26,11 @@ void main() async {
       titleBarStyle: TitleBarStyle.normal,
     ),
     () async {
+      await windowManager.maximize();
       await windowManager.show();
       await windowManager.focus();
     },
   );
 
-  runApp(const GemsApp());
+  runApp(const AmotesApp());
 }

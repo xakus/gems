@@ -75,14 +75,16 @@ class _UserManagementSectionState extends State<UserManagementSection> {
               if (_loading)
                 const Center(child: CircularProgressIndicator())
               else
-                Row(children: [ Expanded(
+                Row(children: [Expanded(
                   child: _UserTable(
                     users: _users,
                     currentUserId: context.read<AuthProvider>().currentUser!.id!,
                     onToggleActive: _toggleActive,
                     onResetPassword: _resetPassword,
+                    onEdit: _showEditDialog,
+                    onDelete: _confirmDelete,
                   ),
-                ),]),
+                )]),
             ],
           ),),
         );
@@ -97,9 +99,83 @@ class _UserManagementSectionState extends State<UserManagementSection> {
         targetUserId: user.id!,
         isActive: active,
         requesterUserId: auth.currentUser!.id!,
+        requesterName: auth.currentUser!.fullName,
         requesterRole: auth.currentUser!.role,
       );
       await _loadUsers();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+        );
+      }
+    }
+  }
+
+  void _showEditDialog(User user) {
+    showDialog(
+      context: context,
+      builder: (ctx) => _EditUserDialog(
+        user: user,
+        onUpdated: _loadUsers,
+      ),
+    );
+  }
+
+  void _confirmDelete(User user) {
+    final l10n = AppLocalizations.of(context);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.warning_rounded, color: AppColors.error),
+            const SizedBox(width: 10),
+            Text(l10n.tr('users_delete_confirm')),
+          ],
+        ),
+        content: Text(
+          l10n.tr('users_delete_confirm_msg', args: {'name': user.fullName}),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(l10n.tr('btn_cancel')),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
+            onPressed: () {
+              Navigator.pop(ctx);
+              _deleteUser(user);
+            },
+            child: Text(
+              l10n.tr('users_delete'),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteUser(User user) async {
+    final auth = context.read<AuthProvider>();
+    try {
+      await _userRepo.delete(
+        targetUserId: user.id!,
+        requesterUserId: auth.currentUser!.id!,
+        requesterName: auth.currentUser!.fullName,
+        requesterRole: auth.currentUser!.role,
+      );
+      await _loadUsers();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).tr('users_deleted')),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -114,6 +190,8 @@ class _UserManagementSectionState extends State<UserManagementSection> {
     try {
       final newPass = await _authService.resetUserPassword(
         targetUserId: user.id!,
+        performerId: auth.currentUser!.id!,
+        performerName: auth.currentUser!.fullName,
         requesterRole: auth.currentUser!.role,
       );
       if (mounted) {
@@ -172,12 +250,16 @@ class _UserTable extends StatelessWidget {
   final int currentUserId;
   final Future<void> Function(User, bool) onToggleActive;
   final Future<void> Function(User) onResetPassword;
+  final void Function(User) onEdit;
+  final void Function(User) onDelete;
 
   const _UserTable({
     required this.users,
     required this.currentUserId,
     required this.onToggleActive,
     required this.onResetPassword,
+    required this.onEdit,
+    required this.onDelete,
   });
 
   @override
@@ -258,6 +340,13 @@ class _UserTable extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Редактировать
+              IconButton(
+                tooltip: AppLocalizations.of(context).tr('users_edit'),
+                icon: const Icon(Icons.edit_rounded,
+                    size: 18, color: AppColors.info),
+                onPressed: () => onEdit(user),
+              ),
               // Активировать/деактивировать
               IconButton(
                 tooltip: user.isActive
@@ -280,6 +369,13 @@ class _UserTable extends StatelessWidget {
                 icon: const Icon(Icons.lock_reset_rounded,
                     size: 18, color: AppColors.warning),
                 onPressed: () => onResetPassword(user),
+              ),
+              // Удалить
+              IconButton(
+                tooltip: AppLocalizations.of(context).tr('users_delete'),
+                icon: const Icon(Icons.delete_rounded,
+                    size: 18, color: AppColors.error),
+                onPressed: isCurrent ? null : () => onDelete(user),
               ),
             ],
           ),
@@ -425,6 +521,8 @@ class _CreateUserDialogState extends State<_CreateUserDialog> {
         lastName: _lastNameCtrl.text,
         username: _usernameCtrl.text,
         role: _role,
+        performerId: auth.currentUser!.id!,
+        performerName: auth.currentUser!.fullName,
         requesterRole: auth.currentUser!.role,
         tempPassword: _passwordCtrl.text,
       );
@@ -553,6 +651,178 @@ class _CreateUserDialogState extends State<_CreateUserDialog> {
                   ),
                 )
               : Text(l10n.tr('users_save')),
+        ),
+      ],
+    );
+  }
+}
+
+/// Диалог редактирования пользователя
+class _EditUserDialog extends StatefulWidget {
+  final User user;
+  final VoidCallback onUpdated;
+
+  const _EditUserDialog({required this.user, required this.onUpdated});
+
+  @override
+  State<_EditUserDialog> createState() => _EditUserDialogState();
+}
+
+class _EditUserDialogState extends State<_EditUserDialog> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _firstNameCtrl;
+  late final TextEditingController _lastNameCtrl;
+  late final TextEditingController _usernameCtrl;
+  late UserRole _role;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstNameCtrl = TextEditingController(text: widget.user.firstName);
+    _lastNameCtrl = TextEditingController(text: widget.user.lastName);
+    _usernameCtrl = TextEditingController(text: widget.user.username);
+    _role = widget.user.role;
+  }
+
+  @override
+  void dispose() {
+    _firstNameCtrl.dispose();
+    _lastNameCtrl.dispose();
+    _usernameCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _loading = true);
+
+    final auth = context.read<AuthProvider>();
+    final repo = UserRepository();
+
+    try {
+      final updated = widget.user.copyWith(
+        firstName: _firstNameCtrl.text.trim(),
+        lastName: _lastNameCtrl.text.trim(),
+        username: _usernameCtrl.text.trim().toLowerCase(),
+        role: _role,
+      );
+      await repo.update(
+        user: updated,
+        requesterUserId: auth.currentUser!.id!,
+        requesterName: auth.currentUser!.fullName,
+        requesterRole: auth.currentUser!.role,
+      );
+      if (mounted) {
+        Navigator.pop(context);
+        widget.onUpdated();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).tr('users_updated')),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Row(
+        children: [
+          const Icon(Icons.edit_rounded, color: AppColors.info),
+          const SizedBox(width: 10),
+          Text(l10n.tr('users_edit_title')),
+        ],
+      ),
+      content: SizedBox(
+        width: 420,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _firstNameCtrl,
+                      decoration:
+                          InputDecoration(labelText: l10n.tr('users_name')),
+                      validator: (v) => Validators.name(v, l10n.tr('users_name')),
+                      textInputAction: TextInputAction.next,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _lastNameCtrl,
+                      decoration: InputDecoration(
+                          labelText: l10n.tr('users_lastname')),
+                      validator: (v) =>
+                          Validators.name(v, l10n.tr('users_lastname')),
+                      textInputAction: TextInputAction.next,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _usernameCtrl,
+                decoration: InputDecoration(
+                  labelText: l10n.tr('users_username'),
+                  prefixIcon: const Icon(Icons.alternate_email, size: 18),
+                ),
+                validator: Validators.username,
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<UserRole>(
+                initialValue: _role,
+                decoration: InputDecoration(labelText: l10n.tr('users_role')),
+                items: [
+                  DropdownMenuItem(
+                    value: UserRole.user,
+                    child: Text(l10n.tr('users_role_user')),
+                  ),
+                  DropdownMenuItem(
+                    value: UserRole.admin,
+                    child: Text(l10n.tr('users_role_admin')),
+                  ),
+                ],
+                onChanged: (v) => setState(() => _role = v!),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.tr('users_cancel')),
+        ),
+        ElevatedButton(
+          onPressed: _loading ? null : _submit,
+          child: _loading
+              ? const SizedBox(
+                  height: 18,
+                  width: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Text(l10n.tr('users_update')),
         ),
       ],
     );

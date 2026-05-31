@@ -1,5 +1,5 @@
-name: gems
-description: "GEMS — Güclü Elektromühərriklərin Monitorinqi və Sınağı"
+name: amotes
+description: "AMOTES — Advanced Motor Operations Testing and Engineering System"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -59,6 +59,7 @@ flutter:
     - assets/images/flags/az.webp
     - assets/images/flags/en.webp
     - assets/images/flags/ru.webp
+    - assets/icons/logo.png
 
   fonts:
     - family: NotoSans

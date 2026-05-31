@@ -5,7 +5,7 @@ import '../../core/localization/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
 import '../../shared/providers/auth_provider.dart';
 import '../../shared/providers/theme_provider.dart';
-import 'gems_logo.dart';
+import 'amotes_logo.dart';
 import 'language_switcher.dart';
 import 'theme_switcher.dart';
 
@@ -33,7 +33,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
+            color: Colors.black.withValues(alpha: isDark ? 0.9 : 0.2),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -44,27 +44,45 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           children: [
             // Логотип + название (Hero для анимации из Splash)
-            Hero(
-              tag: 'gems_logo',
-              child: GemsLogo(size: 36, showGlow: false),
-            ),
-            const SizedBox(width: 10),
-            Hero(
-              tag: 'gems_title',
-              child: Material(
-                color: Colors.transparent,
-                child: Text(
-                  kAppName,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 3,
-                    foreground: Paint()
-                      ..shader = AppColors.logoGradient.createShader(
-                        const Rect.fromLTWH(0, 0, 80, 30),
+            Hero(tag: 'amotes_logo', child: AmotesLogo(size: 250)),
+
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 360),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Hero(
+                    tag: 'amotes_title',
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Text(
+                        kAppName,
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 5,
+                          foreground: Paint()
+                            ..shader = AppColors.logoGradient.createShader(
+                              const Rect.fromLTWH(0, 0, 80, 30),
+                            ),
+                        ),
                       ),
+                    ),
                   ),
-                ),
+                  Text(
+                    AppLocalizations.of(context).tr('app_full_name'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 13,
+                      letterSpacing: 0.3,
+                      color: isDark
+                          ? AppColors.darkSecondaryText
+                          : AppColors.lightSecondaryText,
+                    ),
+                  ),
+                ],
               ),
             ),
 
@@ -181,7 +199,9 @@ class _UserChip extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.darkOnBackground : AppColors.lightOnBackground,
+                color: isDark
+                    ? AppColors.darkOnBackground
+                    : AppColors.lightOnBackground,
               ),
             ),
           ),
@@ -191,7 +211,11 @@ class _UserChip extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             child: const Padding(
               padding: EdgeInsets.all(2),
-              child: Icon(Icons.logout_rounded, size: 16, color: AppColors.error),
+              child: Icon(
+                Icons.logout_rounded,
+                size: 16,
+                color: AppColors.error,
+              ),
             ),
           ),
         ],

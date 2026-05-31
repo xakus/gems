@@ -11,8 +11,8 @@ import '../shared/providers/theme_provider.dart';
 import 'router.dart';
 
 /// Корневой виджет приложения — MaterialApp с темами, локализацией и провайдерами
-class GemsApp extends StatelessWidget {
-  const GemsApp({super.key});
+class AmotesApp extends StatelessWidget {
+  const AmotesApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,16 @@ class GemsApp extends StatelessWidget {
   }
 }
 
-class _AppRoot extends StatelessWidget {
+class _AppRoot extends StatefulWidget {
   const _AppRoot();
+
+  @override
+  State<_AppRoot> createState() => _AppRootState();
+}
+
+class _AppRootState extends State<_AppRoot> {
+  // Стабильный ключ — Navigator не пересоздаётся при rebuild MaterialApp
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +44,7 @@ class _AppRoot extends StatelessWidget {
     final locale = context.watch<LocaleProvider>().locale;
 
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       title: kAppName,
       debugShowCheckedModeBanner: false,
 

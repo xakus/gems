@@ -50,6 +50,8 @@ class DatabaseHelper {
         role                 TEXT    NOT NULL CHECK(role IN ('USER','ADMIN')),
         is_active            INTEGER NOT NULL DEFAULT 1,
         must_change_password INTEGER NOT NULL DEFAULT 1,
+        is_deleted           INTEGER NOT NULL DEFAULT 0,
+        deleted_at           TEXT,
         created_at           TEXT    NOT NULL,
         updated_at           TEXT    NOT NULL
       )
@@ -70,15 +72,41 @@ class DatabaseHelper {
       )
     ''');
 
+    await _createAuditLogTable(db);
+
     await db.insert('app_meta', {'key': kMetaDbVersion, 'value': '$version'});
     await db.insert('app_meta', {'key': kMetaFirstRun, 'value': 'true'});
 
     await _seedAdmin(db);
   }
 
+  /// Создаёт таблицу журнала аудита
+  Future<void> _createAuditLogTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE audit_log (
+        id                INTEGER PRIMARY KEY AUTOINCREMENT,
+        action            TEXT NOT NULL,
+        performed_by_id   INTEGER NOT NULL,
+        performed_by_name TEXT NOT NULL,
+        target_user_id    INTEGER NOT NULL,
+        target_user_name  TEXT NOT NULL,
+        changes           TEXT,
+        created_at        TEXT NOT NULL
+      )
+    ''');
+  }
+
   /// Миграции при обновлении схемы
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Здесь будут миграции при необходимости
+    // v1 → v2: мягкое удаление + журнал аудита
+    if (oldVersion < 2) {
+      await db.execute(
+        'ALTER TABLE users ADD COLUMN is_deleted INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute('ALTER TABLE users ADD COLUMN deleted_at TEXT');
+      await _createAuditLogTable(db);
+    }
+
     await db.insert(
       'app_meta',
       {'key': kMetaDbVersion, 'value': '$newVersion'},
@@ -95,7 +123,7 @@ class DatabaseHelper {
 
     final adminId = await db.insert('users', {
       'first_name': 'Admin',
-      'last_name': 'GEMS',
+      'last_name': 'AMOTES',
       'username': kDefaultAdminUsername,
       'password_hash': hash,
       'password_salt': salt,

@@ -1,4 +1,4 @@
-// Центральный файл конфигурации GEMS.
+// Центральный файл конфигурации AMOTES.
 // Все настройки приложения — здесь. Не хардкодить нигде в коде.
 
 // ─────────────────────────────────────────────
@@ -6,20 +6,19 @@
 // ─────────────────────────────────────────────
 
 /// Короткое название
-const String kAppName = 'GEMS';
+const String kAppName = 'AMOTES';
 
 /// Полное название (азербайджанский, часть бренда — не переводить)
-const String kAppFullName =
-    'Güclü Elektromühərriklərin Monitorinqi və Sınağı';
+const String kAppFullName = 'Güclü Elektromühərriklərin Monitorinqi və Sınağı';
 
 /// Версия приложения
 const String kAppVersion = '1.0.0';
 
 /// Имя файла базы данных
-const String kDatabaseFileName = 'gems.db';
+const String kDatabaseFileName = 'amotes.db';
 
 /// Текущая версия схемы БД (для миграций)
-const int kDatabaseVersion = 1;
+const int kDatabaseVersion = 2;
 
 // ─────────────────────────────────────────────
 //  Окно приложения
@@ -29,7 +28,7 @@ const int kDatabaseVersion = 1;
 const double kWindowMinWidth = 900;
 
 /// Минимальная высота окна
-const double kWindowMinHeight = 600;
+const double kWindowMinHeight = 800;
 
 /// Начальная ширина окна
 const double kWindowInitialWidth = 1280;
@@ -42,7 +41,7 @@ const double kWindowInitialHeight = 800;
 // ─────────────────────────────────────────────
 
 /// Длительность splash-экрана в секундах
-const int kSplashDurationSeconds = 3;
+const int kSplashDurationSeconds = 2;
 
 /// Длительность анимации fade-in логотипа (мс)
 const int kSplashLogoFadeDurationMs = 600;
@@ -94,10 +93,10 @@ const String kDefaultTheme = 'light';
 // ─────────────────────────────────────────────
 
 /// Ключ темы в SharedPreferences (до логина)
-const String kPrefsThemeKey = 'gems_theme';
+const String kPrefsThemeKey = 'amotes_theme';
 
 /// Ключ языка в SharedPreferences (до логина)
-const String kPrefsLocaleKey = 'gems_locale';
+const String kPrefsLocaleKey = 'amotes_locale';
 
 // ─────────────────────────────────────────────
 //  Ключи таблицы app_meta
@@ -136,7 +135,7 @@ const double kCardRadius = 16;
 const double kButtonRadius = 12;
 
 /// Высота AppHeader
-const double kHeaderHeight = 64;
+const double kHeaderHeight = 100;
 
 /// Стандартный внутренний отступ
 const double kPadding = 16;

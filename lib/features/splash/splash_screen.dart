@@ -6,7 +6,7 @@ import '../../core/database/database_helper.dart';
 import '../../core/theme/app_colors.dart';
 import '../../shared/providers/theme_provider.dart';
 import '../../shared/providers/locale_provider.dart';
-import '../../shared/widgets/gems_logo.dart';
+import '../../shared/widgets/amotes_logo.dart';
 
 /// Splash-экран с staggered-анимацией и параллельной инициализацией БД
 class SplashScreen extends StatefulWidget {
@@ -79,28 +79,32 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Логотип с Hero-тегом для анимации перехода в Header
+              // Логотип: .animate() внутри Hero — не мешает Hero flight
               Hero(
-                tag: 'gems_logo',
-                child: const GemsLogo(size: 96),
-              )
-                  .animate()
-                  .fadeIn(
-                    duration: Duration(milliseconds: kSplashLogoFadeDurationMs),
-                    curve: Curves.easeOut,
-                  )
-                  .scale(
-                    begin: const Offset(0.6, 0.6),
-                    end: const Offset(1.0, 1.0),
-                    duration: Duration(milliseconds: kSplashLogoFadeDurationMs),
-                    curve: Curves.elasticOut,
-                  ),
+                tag: 'amotes_logo',
+                child: AmotesLogo(size: 96)
+                    .animate()
+                    .fadeIn(
+                      duration: Duration(
+                        milliseconds: kSplashLogoFadeDurationMs,
+                      ),
+                      curve: Curves.easeOut,
+                    )
+                    .scale(
+                      begin: const Offset(0.6, 0.6),
+                      end: const Offset(1.0, 1.0),
+                      duration: Duration(
+                        milliseconds: kSplashLogoFadeDurationMs,
+                      ),
+                      curve: Curves.elasticOut,
+                    ),
+              ),
 
               const SizedBox(height: 28),
 
-              // Название GEMS
+              // Название AMOTES: .animate() внутри Hero
               Hero(
-                tag: 'gems_title',
+                tag: 'amotes_title',
                 child: Material(
                   color: Colors.transparent,
                   child: Text(
@@ -117,14 +121,16 @@ class _SplashScreenState extends State<SplashScreen> {
                             ),
                         ),
                   ),
-                ),
-              )
-                  .animate(delay: Duration(milliseconds: kSplashTitleDelayMs))
-                  .fadeIn(
-                    duration: Duration(milliseconds: kSplashLogoFadeDurationMs),
-                    curve: Curves.easeOut,
-                  )
-                  .slideY(begin: 0.3, end: 0),
+                )
+                    .animate(delay: Duration(milliseconds: kSplashTitleDelayMs))
+                    .fadeIn(
+                      duration: Duration(
+                        milliseconds: kSplashLogoFadeDurationMs,
+                      ),
+                      curve: Curves.easeOut,
+                    )
+                    .slideY(begin: 0.3, end: 0),
+              ),
 
               const SizedBox(height: 12),
 
@@ -192,7 +198,7 @@ class _AdminFirstRunDialog extends StatelessWidget {
         children: [
           const Icon(Icons.admin_panel_settings, color: AppColors.primary),
           const SizedBox(width: 10),
-          const Expanded(child: Text('Добро пожаловать в GEMS')),
+          const Expanded(child: Text('Добро пожаловать в AMOTES')),
         ],
       ),
       content: Column(

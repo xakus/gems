@@ -34,13 +34,19 @@ class _AuthGuard extends StatelessWidget {
     final auth = context.watch<AuthProvider>();
 
     if (!auth.isAuthenticated) {
-      // Редирект на логин (после первого кадра)
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacementNamed(context, kRouteLogin);
+        final navigator = Navigator.of(context);
+        // Получаем имя текущего верхнего маршрута через navigator
+        navigator.popUntil((route) {
+          if (route.settings.name == kRouteLogin) return true;
+          if (route.settings.name != null &&
+              route.settings.name != kRouteLogin) {
+            navigator.pushReplacementNamed(kRouteLogin);
+          }
+          return true;
+        });
       });
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final user = auth.currentUser!;
@@ -51,9 +57,7 @@ class _AuthGuard extends StatelessWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacementNamed(context, kRouteHome);
         });
-        return const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
       return const ChangePasswordScreen();
     }
@@ -63,15 +67,15 @@ class _AuthGuard extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, kRouteChangePassword);
       });
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return switch (routeName) {
       kRouteHome => const HomeScreen(),
       kRouteSettings => const SettingsScreen(),
-      _ => const Scaffold(body: Center(child: Text('404 — страница не найдена'))),
+      _ => const Scaffold(
+        body: Center(child: Text('404 — страница не найдена')),
+      ),
     };
   }
 }
