@@ -34,6 +34,8 @@ class _LoginScreenState extends State<LoginScreen>
   late final AnimationController _shakeController;
   late final Animation<double> _shakeAnimation;
 
+  Timer? _errorTimer;
+
   @override
   void initState() {
     super.initState();
@@ -63,8 +65,6 @@ class _LoginScreenState extends State<LoginScreen>
     _passwordCtrl.dispose();
     super.dispose();
   }
-
-  Timer? _errorTimer;
 
   void _triggerShake() {
     _shakeController.forward(from: 0);
@@ -109,15 +109,11 @@ class _LoginScreenState extends State<LoginScreen>
         );
 
       case LoginResult.invalidCredentials:
-        setState(() {
-          _submitting = false;
-        });
+        setState(() => _submitting = false);
         _showError(l10n.tr('login_error_invalid'));
 
       case LoginResult.accountDisabled:
-        setState(() {
-          _submitting = false;
-        });
+        setState(() => _submitting = false);
         _showError(l10n.tr('login_error_disabled'));
     }
   }
@@ -163,202 +159,205 @@ class _LoginScreenState extends State<LoginScreen>
 
             Column(
               children: [
-                // Лого + заголовок
-                Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: kFormMaxWidth),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        kPaddingLarge,
-                        kPaddingSmall,
-                        kPaddingLarge,
-                        0,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Shake-анимация при ошибке логина (macOS-стиль)
-                          AnimatedBuilder(
-                            animation: _shakeAnimation,
-                            builder: (context, child) => Transform.translate(
-                              offset: Offset(_shakeAnimation.value, 0),
-                              child: child,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Hero(
-                                  tag: 'amotes_logo',
-                                  child: AmotesLogo(size: 160),
-                                ),
-                                const SizedBox(height: 12),
-                                Hero(
-                                  tag: 'amotes_title',
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: Text(
-                                      kAppName,
-                                      style: TextStyle(
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.w800,
-                                        letterSpacing: 5,
-                                        foreground: Paint()
-                                          ..shader = AppColors.logoGradient
-                                              .createShader(
-                                                const Rect.fromLTWH(
-                                                    0, 0, 140, 50),
-                                              ),
+                // Лого + AMOTES + подзаголовок (сверху, фиксированно)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    kPaddingLarge,
+                    kPaddingLarge,
+                    kPaddingLarge,
+                    0,
+                  ),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Hero(
+                          tag: 'amotes_logo',
+                          child: AmotesLogo(size: 180),
+                        ),
+                        const SizedBox(height: 5),
+                        Hero(
+                          tag: 'amotes_title',
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Text(
+                              kAppName,
+                              style: TextStyle(
+                                fontSize: 90,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 6,
+                                foreground: Paint()
+                                  ..shader = AppColors.logoGradient
+                                      .createShader(
+                                        const Rect.fromLTWH(0, 0, 220, 70),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  l10n.tr('app_full_name'),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    letterSpacing: 0.4,
-                                    color: isDark
-                                        ? AppColors.darkSecondaryText
-                                        : AppColors.lightSecondaryText,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-
-                          const SizedBox(height: 8),
-
-                          Text(
-                            l10n.tr('login_title'),
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: isDark
-                                      ? AppColors.darkSecondaryText
-                                      : AppColors.lightSecondaryText,
-                                ),
-                          ).animate(delay: 150.ms).fadeIn(),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          l10n.tr('app_full_name'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            letterSpacing: 0.4,
+                            color: isDark
+                                ? AppColors.darkSecondaryText
+                                : AppColors.lightSecondaryText,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
 
-                // Форма
+                // "Вход в систему" + форма — прижаты ближе к заголовку
                 Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(
-                      kPaddingLarge,
-                      28,
-                      kPaddingLarge,
-                      kPaddingLarge,
-                    ),
-                    child: Align(
-                      alignment: Alignment.topCenter,
+                  child: Align(
+                    alignment: const Alignment(0, -0.2),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kPaddingLarge,
+                        vertical: kPaddingSmall,
+                      ),
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          maxWidth: kFormMaxWidth,
-                        ),
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(kPaddingLarge),
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  TextFormField(
-                                    controller: _usernameCtrl,
-                                    decoration: InputDecoration(
-                                      labelText: l10n.tr('login_username'),
-                                      prefixIcon: const Icon(
-                                        Icons.person_outline,
-                                      ),
+                        constraints:
+                            const BoxConstraints(maxWidth: kFormMaxWidth),
+                        child: AnimatedBuilder(
+                          animation: _shakeAnimation,
+                          builder: (context, child) => Transform.translate(
+                            offset: Offset(_shakeAnimation.value, 0),
+                            child: child,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                l10n.tr('login_title'),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: isDark
+                                          ? AppColors.darkSecondaryText
+                                          : AppColors.lightSecondaryText,
                                     ),
-                                    textInputAction: TextInputAction.next,
-                                    validator: Validators.username,
-                                    onFieldSubmitted: (_) =>
-                                        FocusScope.of(context).nextFocus(),
-                                  ),
-
-                                  const SizedBox(height: 16),
-
-                                  TextFormField(
-                                    controller: _passwordCtrl,
-                                    obscureText: !_passwordVisible,
-                                    decoration: InputDecoration(
-                                      labelText: l10n.tr('login_password'),
-                                      prefixIcon: const Icon(
-                                        Icons.lock_outline,
-                                      ),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          _passwordVisible
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
-                                        ),
-                                        onPressed: () => {
-                                          setState(
-                                            () => _passwordVisible =
-                                                !_passwordVisible,
-                                          ),
-                                        },
-                                      ),
-                                    ),
-                                    textInputAction: TextInputAction.done,
-                                    validator: (v) => (v == null || v.isEmpty)
-                                        ? l10n.tr('validation_required')
-                                        : null,
-                                    onFieldSubmitted: (_) => _submit(),
-                                  ),
-
-                                  const SizedBox(height: 12),
-
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      onPressed: _submitting ? null : _submit,
-                                      child: _submitting
-                                          ? const SizedBox(
-                                              height: 20,
-                                              width: 20,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                color: Colors.white,
-                                              ),
-                                            )
-                                          : Text(l10n.tr('login_button')),
-                                    ),
-                                  ),
-
-                                  if (_errorMessage != null)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 12),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.error_outline,
-                                            size: 16,
-                                            color: Colors.redAccent,
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Expanded(
-                                            child: Text(
-                                              _errorMessage!,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.copyWith(
-                                                    color: Colors.redAccent,
-                                                  ),
+                              ).animate(delay: 150.ms).fadeIn(),
+                              const SizedBox(height: 16),
+                              Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(kPaddingLarge),
+                                  child: Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        TextFormField(
+                                          controller: _usernameCtrl,
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                l10n.tr('login_username'),
+                                            prefixIcon: const Icon(
+                                              Icons.person_outline,
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                          textInputAction:
+                                              TextInputAction.next,
+                                          validator: Validators.username,
+                                          onFieldSubmitted: (_) =>
+                                              FocusScope.of(context)
+                                                  .nextFocus(),
+                                        ),
+
+                                        const SizedBox(height: 16),
+
+                                        TextFormField(
+                                          controller: _passwordCtrl,
+                                          obscureText: !_passwordVisible,
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                l10n.tr('login_password'),
+                                            prefixIcon: const Icon(
+                                              Icons.lock_outline,
+                                            ),
+                                            suffixIcon: IconButton(
+                                              icon: Icon(
+                                                _passwordVisible
+                                                    ? Icons.visibility_off
+                                                    : Icons.visibility,
+                                              ),
+                                              onPressed: () => setState(
+                                                () => _passwordVisible =
+                                                    !_passwordVisible,
+                                              ),
+                                            ),
+                                          ),
+                                          textInputAction:
+                                              TextInputAction.done,
+                                          validator: (v) =>
+                                              (v == null || v.isEmpty)
+                                                  ? l10n.tr(
+                                                      'validation_required')
+                                                  : null,
+                                          onFieldSubmitted: (_) => _submit(),
+                                        ),
+
+                                        const SizedBox(height: 12),
+
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                            onPressed:
+                                                _submitting ? null : _submit,
+                                            child: _submitting
+                                                ? const SizedBox(
+                                                    height: 20,
+                                                    width: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                      color: Colors.white,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    l10n.tr('login_button')),
+                                          ),
+                                        ),
+
+                                        if (_errorMessage != null)
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 12),
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.error_outline,
+                                                  size: 16,
+                                                  color: Colors.redAccent,
+                                                ),
+                                                const SizedBox(width: 6),
+                                                Expanded(
+                                                  child: Text(
+                                                    _errorMessage!,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                          color:
+                                                              Colors.redAccent,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
                                     ),
-                                ],
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       ),

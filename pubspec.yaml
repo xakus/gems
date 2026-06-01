@@ -60,6 +60,8 @@ flutter:
     - assets/images/flags/en.webp
     - assets/images/flags/ru.webp
     - assets/icons/logo.png
+    - assets/menu_image/
+    - assets/engin_test_type_image/
 
   fonts:
     - family: NotoSans

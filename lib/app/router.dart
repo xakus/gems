@@ -6,6 +6,12 @@ import '../features/auth/login_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/splash/splash_screen.dart';
+import '../features/stands/stand_1_screen.dart';
+import '../features/stands/stand_2_screen.dart';
+import '../features/stands/stand_3_screen.dart';
+import '../features/stands/stand_4_screen.dart';
+import '../features/stands/stand_5_screen.dart';
+import '../features/stands/stand_test_screen.dart';
 import '../shared/providers/auth_provider.dart';
 
 /// Генератор маршрутов с guard-ами доступа
@@ -73,6 +79,17 @@ class _AuthGuard extends StatelessWidget {
     return switch (routeName) {
       kRouteHome => const HomeScreen(),
       kRouteSettings => const SettingsScreen(),
+      kRouteStand1 => const Stand1Screen(),
+      kRouteStand2 => const Stand2Screen(),
+      kRouteStand3 => const Stand3Screen(),
+      kRouteStand4 => const Stand4Screen(),
+      kRouteStand5 => const Stand5Screen(),
+      kRouteStand1Loaded   => const StandTestScreen(standTitleKey: 'stand_1_title', testTypeKey: 'stand_test_loaded'),
+      kRouteStand1Unloaded => const StandTestScreen(standTitleKey: 'stand_1_title', testTypeKey: 'stand_test_unloaded'),
+      kRouteStand2Loaded   => const StandTestScreen(standTitleKey: 'stand_2_title', testTypeKey: 'stand_test_loaded'),
+      kRouteStand2Unloaded => const StandTestScreen(standTitleKey: 'stand_2_title', testTypeKey: 'stand_test_unloaded'),
+      kRouteStand3Loaded   => const StandTestScreen(standTitleKey: 'stand_3_title', testTypeKey: 'stand_test_loaded'),
+      kRouteStand3Unloaded => const StandTestScreen(standTitleKey: 'stand_3_title', testTypeKey: 'stand_test_unloaded'),
       _ => const Scaffold(
         body: Center(child: Text('404 — страница не найдена')),
       ),

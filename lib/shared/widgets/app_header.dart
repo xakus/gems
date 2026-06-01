@@ -11,7 +11,10 @@ import 'theme_switcher.dart';
 
 /// Общий AppHeader для Home и Settings экранов
 class AppHeader extends StatelessWidget implements PreferredSizeWidget {
-  const AppHeader({super.key});
+  /// Показывать ли кнопку «назад» (только на экранах стендов)
+  final bool showBackButton;
+
+  const AppHeader({super.key, this.showBackButton = false});
 
   @override
   Size get preferredSize => const Size.fromHeight(kHeaderHeight);
@@ -43,6 +46,16 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.symmetric(horizontal: kPaddingLarge),
         child: Row(
           children: [
+            // Кнопка «назад» — только на экранах стендов
+            if (showBackButton) ...[
+              IconButton(
+                tooltip: AppLocalizations.of(context).tr('nav_back'),
+                icon: const Icon(Icons.arrow_back_rounded),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const SizedBox(width: 4),
+            ],
+
             // Логотип + название (Hero для анимации из Splash)
             Hero(tag: 'amotes_logo', child: AmotesLogo(size: 250)),
 

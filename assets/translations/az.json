@@ -1,6 +1,6 @@
 {
   "app_name": "AMOTES",
-  "app_full_name": "Asinxron Motor Sınaq Sistemi",
+  "app_full_name": "Asinxron Motor Test Sistemi",
   "app_subtitle": "Güclü Elektromühərriklərin Monitorinqi və Sınağı",
 
   "login_title": "Sistemə Giriş",
@@ -19,6 +19,20 @@
 
   "home_placeholder": "Əsas modul hazırlanır",
   "home_placeholder_sub": "Elektrik mühərriki test modulu növbəti versiyada əlavə ediləcək",
+
+  "stand_1_title": "1 Stend",
+  "stand_1_subtitle": "22 kVt gücə qədər mühərriklər",
+  "stand_2_title": "2 Stend",
+  "stand_2_subtitle": "170 kVt gücə qədər mühərriklər",
+  "stand_3_title": "3 Stend",
+  "stand_3_subtitle": "170 kVt gücə qədər mühərriklər",
+  "stand_4_title": "4 Stend",
+  "stand_4_subtitle": "170 kVt gücə qədər dart mühərrikləri",
+  "stand_5_title": "5 Stend",
+  "stand_5_subtitle": "Kompressor",
+  "stand_coming_soon": "Test modulu hazırlanır",
+  "stand_test_loaded": "Yük altında",
+  "stand_test_unloaded": "Yüksüz",
 
   "header_settings": "Parametrlər",
   "header_logout": "Çıxış",

@@ -170,3 +170,30 @@ const String kRouteHome = '/home';
 
 /// Маршрут настроек
 const String kRouteSettings = '/settings';
+
+/// Маршрут стенда 1 — малый двигатель до 75 кВт
+const String kRouteStand1 = '/stand-1';
+
+/// Маршрут стенда 2 — средний двигатель до 315 кВт
+const String kRouteStand2 = '/stand-2';
+
+/// Маршрут стенда 3 — большой двигатель до 1000 кВт
+const String kRouteStand3 = '/stand-3';
+
+/// Маршрут стенда 4 — компрессор
+const String kRouteStand4 = '/stand-4';
+
+/// Маршрут стенда 5 — средний двигатель (копия стенда 2)
+const String kRouteStand5 = '/stand-5';
+
+/// Маршруты экранов тестирования стенда 1
+const String kRouteStand1Loaded   = '/stand-1/loaded';
+const String kRouteStand1Unloaded = '/stand-1/unloaded';
+
+/// Маршруты экранов тестирования стенда 2
+const String kRouteStand2Loaded   = '/stand-2/loaded';
+const String kRouteStand2Unloaded = '/stand-2/unloaded';
+
+/// Маршруты экранов тестирования стенда 3
+const String kRouteStand3Loaded   = '/stand-3/loaded';
+const String kRouteStand3Unloaded = '/stand-3/unloaded';
