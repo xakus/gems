@@ -34,6 +34,22 @@
   "stand_test_loaded": "Under load",
   "stand_test_unloaded": "No load",
 
+  "motor_params_power": "Power",
+  "motor_params_voltage": "Voltage",
+  "motor_params_current": "Current",
+  "motor_params_speed": "Rotation speed",
+  "motor_params_frequency": "Frequency",
+  "motor_params_next": "Next",
+  "motor_params_power_exceeded": "Power must not exceed {max} kW",
+  "motor_params_negative_error": "Enter a positive number",
+  "motor_params_required": "This field is required",
+
+  "unit_kwt": "kW",
+  "unit_v": "V",
+  "unit_a": "A",
+  "unit_rpm": "rpm",
+  "unit_hz": "Hz",
+
   "header_settings": "Settings",
   "header_logout": "Logout",
   "header_logout_confirm": "Are you sure you want to logout?",

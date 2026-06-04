@@ -34,6 +34,22 @@
   "stand_test_loaded": "С нагрузкой",
   "stand_test_unloaded": "Без нагрузки",
 
+  "motor_params_power": "Мощность",
+  "motor_params_voltage": "Напряжение",
+  "motor_params_current": "Ток",
+  "motor_params_speed": "Скорость вращения",
+  "motor_params_frequency": "Частота",
+  "motor_params_next": "Дальше",
+  "motor_params_power_exceeded": "Мощность не должна превышать {max} кВт",
+  "motor_params_negative_error": "Введите положительное число",
+  "motor_params_required": "Поле обязательно для заполнения",
+
+  "unit_kwt": "кВт",
+  "unit_v": "В",
+  "unit_a": "А",
+  "unit_rpm": "об/мин",
+  "unit_hz": "Гц",
+
   "header_settings": "Настройки",
   "header_logout": "Выйти",
   "header_logout_confirm": "Вы уверены, что хотите выйти?",

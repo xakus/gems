@@ -46,28 +46,34 @@ class _Stand2Body extends StatelessWidget {
 
           const SizedBox(height: kPaddingLarge * 2),
 
-          // Две карточки режима теста
+          // Две карточки режима теста (половина доступного пространства)
           Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _TestTypeCard(
-                    image: 'assets/engin_test_type_image/middle_engin_power.png',
-                    label: loc.tr('stand_test_loaded'),
-                    delay: 0,
-                    onTap: () => Navigator.pushNamed(context, kRouteStand2Loaded),
-                  ),
+            child: Center(
+              child: FractionallySizedBox(
+                widthFactor: 0.5,
+                heightFactor: 0.5,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _TestTypeCard(
+                        image: 'assets/engin_test_type_image/middle_engin_power.png',
+                        label: loc.tr('stand_test_loaded'),
+                        delay: 0,
+                        onTap: () => Navigator.pushNamed(context, kRouteStand2Loaded),
+                      ),
+                    ),
+                    const SizedBox(width: kPaddingLarge),
+                    Expanded(
+                      child: _TestTypeCard(
+                        image: 'assets/engin_test_type_image/middle_engin_free.png',
+                        label: loc.tr('stand_test_unloaded'),
+                        delay: 120,
+                        onTap: () => Navigator.pushNamed(context, kRouteStand2Unloaded),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: kPaddingLarge),
-                Expanded(
-                  child: _TestTypeCard(
-                    image: 'assets/engin_test_type_image/middle_engin_free.png',
-                    label: loc.tr('stand_test_unloaded'),
-                    delay: 120,
-                    onTap: () => Navigator.pushNamed(context, kRouteStand2Unloaded),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
 
@@ -149,7 +155,7 @@ class _TestTypeCardState extends State<_TestTypeCard> {
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) => Icon(
                         Icons.electric_bolt_rounded,
-                        size: 96,
+                        size: 48,
                         color: primary,
                       ),
                     ),
@@ -181,7 +187,7 @@ class _TestTypeCardState extends State<_TestTypeCard> {
                     widget.label,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontSize: 34,
+                          fontSize: 17,
                           color: primary,
                           fontWeight: FontWeight.w600,
                         ),

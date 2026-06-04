@@ -197,3 +197,19 @@ const String kRouteStand2Unloaded = '/stand-2/unloaded';
 /// Маршруты экранов тестирования стенда 3
 const String kRouteStand3Loaded   = '/stand-3/loaded';
 const String kRouteStand3Unloaded = '/stand-3/unloaded';
+
+/// Маршрут экрана результатов после ввода параметров (режим «Без нагрузки»)
+const String kRouteStandUnloadedResult = '/stand/unloaded/result';
+
+// ─────────────────────────────────────────────
+//  Максимальная мощность стендов (кВт)
+// ─────────────────────────────────────────────
+
+/// Стенд 1 — двигатели до 22 кВт
+const double kStand1MaxPowerKwt = 22.0;
+
+/// Стенд 2 — двигатели до 170 кВт
+const double kStand2MaxPowerKwt = 170.0;
+
+/// Стенд 3 — двигатели до 170 кВт
+const double kStand3MaxPowerKwt = 170.0;

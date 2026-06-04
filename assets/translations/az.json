@@ -34,6 +34,22 @@
   "stand_test_loaded": "Yük altında",
   "stand_test_unloaded": "Yüksüz",
 
+  "motor_params_power": "Güc",
+  "motor_params_voltage": "Gərginlik",
+  "motor_params_current": "Cərəyan",
+  "motor_params_speed": "Fırlanma sürəti",
+  "motor_params_frequency": "Tezlik",
+  "motor_params_next": "İrəli",
+  "motor_params_power_exceeded": "Güc {max} kVt-dən çox olmamalıdır",
+  "motor_params_negative_error": "Müsbət ədəd daxil edin",
+  "motor_params_required": "Bu sahə məcburidir",
+
+  "unit_kwt": "kVt",
+  "unit_v": "V",
+  "unit_a": "A",
+  "unit_rpm": "dv/dəq",
+  "unit_hz": "Hz",
+
   "header_settings": "Parametrlər",
   "header_logout": "Çıxış",
   "header_logout_confirm": "Çıxmaq istədiyinizdən əminsinizmi?",
