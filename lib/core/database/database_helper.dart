@@ -4,7 +4,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../constants/config.dart';
 import '../utils/password_hasher.dart';
-import '../utils/temp_password_generator.dart';
 
 /// Синглтон для работы с SQLite.
 /// Инициализирует схему и создаёт дефолтного ADMIN при первом запуске.
@@ -73,11 +72,34 @@ class DatabaseHelper {
     ''');
 
     await _createAuditLogTable(db);
+    await _createCompressorTemplatesTable(db);
 
     await db.insert('app_meta', {'key': kMetaDbVersion, 'value': '$version'});
     await db.insert('app_meta', {'key': kMetaFirstRun, 'value': 'true'});
 
     await _seedAdmin(db);
+  }
+
+  /// Создаёт таблицу шаблонов настроек компрессора
+  Future<void> _createCompressorTemplatesTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE compressor_templates (
+        id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+        name               TEXT    NOT NULL,
+        compressor_name    TEXT    NOT NULL,
+        power_kwt          REAL    NOT NULL,
+        voltage_v          REAL    NOT NULL,
+        current_a          REAL    NOT NULL,
+        speed_rpm          REAL    NOT NULL,
+        frequency_hz       REAL    NOT NULL,
+        productivity_l_min REAL    NOT NULL,
+        pressure_bar       REAL    NOT NULL,
+        hold_time_min      REAL    NOT NULL DEFAULT 0,
+        receiver_volume_l  REAL    NOT NULL,
+        created_at         TEXT    NOT NULL,
+        updated_at         TEXT    NOT NULL
+      )
+    ''');
   }
 
   /// Создаёт таблицу журнала аудита
@@ -105,6 +127,11 @@ class DatabaseHelper {
       );
       await db.execute('ALTER TABLE users ADD COLUMN deleted_at TEXT');
       await _createAuditLogTable(db);
+    }
+
+    // v2 → v3: таблица шаблонов компрессора
+    if (oldVersion < 3) {
+      await _createCompressorTemplatesTable(db);
     }
 
     await db.insert(

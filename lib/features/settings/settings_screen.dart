@@ -11,6 +11,7 @@ import '../../shared/providers/locale_provider.dart';
 import '../../shared/providers/theme_provider.dart';
 import '../../shared/widgets/app_header.dart';
 import '../user_management/audit_log_section.dart';
+import '../user_management/compressor_templates_section.dart';
 import '../user_management/user_management_section.dart';
 
 /// Экран настроек с двумя разделами: Общие и Пользователи (только ADMIN)
@@ -46,11 +47,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Expanded(
             child: AnimatedSwitcher(
               duration: Duration(milliseconds: kAnimationDurationMs),
-              child: _selectedIndex == 0
-                  ? const _GeneralSection(key: ValueKey('general'))
-                  : _selectedIndex == 1
-                      ? const UserManagementSection(key: ValueKey('users'))
-                      : const AuditLogSection(key: ValueKey('audit')),
+              child: switch (_selectedIndex) {
+                0 => const _GeneralSection(key: ValueKey('general')),
+                1 => const UserManagementSection(key: ValueKey('users')),
+                2 => const CompressorTemplatesSection(key: ValueKey('templates')),
+                _ => const AuditLogSection(key: ValueKey('audit')),
+              },
             ),
           ),
         ],
@@ -131,10 +133,17 @@ class _SettingsSidebar extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             _SidebarItem(
-              icon: Icons.history_rounded,
-              label: AppLocalizations.of(context).tr('settings_audit'),
+              icon: Icons.layers_rounded,
+              label: AppLocalizations.of(context).tr('settings_templates'),
               selected: selectedIndex == 2,
               onTap: () => onSelect(2),
+            ),
+            const SizedBox(height: 4),
+            _SidebarItem(
+              icon: Icons.history_rounded,
+              label: AppLocalizations.of(context).tr('settings_audit'),
+              selected: selectedIndex == 3,
+              onTap: () => onSelect(3),
             ),
           ],
         ],
@@ -167,27 +176,33 @@ class _SidebarItem extends StatelessWidget {
             : Colors.transparent,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: ListTile(
-        leading: Icon(
-          icon,
-          color: selected
-              ? AppColors.primary
-              : (isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText),
-          size: 20,
-        ),
-        title: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+      // Material нужен чтобы ListTile рисовал ink-эффекты поверх
+      // фона AnimatedContainer, а не под ним
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        child: ListTile(
+          leading: Icon(
+            icon,
             color: selected
                 ? AppColors.primary
-                : (isDark ? AppColors.darkOnBackground : AppColors.lightOnBackground),
+                : (isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText),
+            size: 20,
           ),
+          title: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+              color: selected
+                  ? AppColors.primary
+                  : (isDark ? AppColors.darkOnBackground : AppColors.lightOnBackground),
+            ),
+          ),
+          dense: true,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          onTap: onTap,
         ),
-        dense: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        onTap: onTap,
       ),
     );
   }

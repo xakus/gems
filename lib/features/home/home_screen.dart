@@ -54,7 +54,7 @@ class _HomeBody extends StatelessWidget {
         titleKey: 'stand_5_title',
         subtitleKey: 'stand_5_subtitle',
         image: 'assets/menu_image/kompressor.png',
-        route: kRouteStand5,
+        route: kRouteStand5Compressor,
       ),
     ];
 

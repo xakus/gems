@@ -18,7 +18,7 @@ const String kAppVersion = '1.0.0';
 const String kDatabaseFileName = 'amotes.db';
 
 /// Текущая версия схемы БД (для миграций)
-const int kDatabaseVersion = 2;
+const int kDatabaseVersion = 3;
 
 // ─────────────────────────────────────────────
 //  Окно приложения
@@ -185,6 +185,9 @@ const String kRouteStand4 = '/stand-4';
 
 /// Маршрут стенда 5 — средний двигатель (копия стенда 2)
 const String kRouteStand5 = '/stand-5';
+
+/// Маршрут экрана ввода параметров компрессора (стенд 5)
+const String kRouteStand5Compressor = '/stand-5/compressor';
 
 /// Маршруты экранов тестирования стенда 1
 const String kRouteStand1Loaded   = '/stand-1/loaded';

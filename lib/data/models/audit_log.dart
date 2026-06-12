@@ -7,7 +7,10 @@ enum AuditAction {
   activate,
   deactivate,
   resetPassword,
-  delete;
+  delete,
+  templateCreate,
+  templateUpdate,
+  templateDelete;
 
   String toDbString() => switch (this) {
     AuditAction.create => 'CREATE',
@@ -16,6 +19,9 @@ enum AuditAction {
     AuditAction.deactivate => 'DEACTIVATE',
     AuditAction.resetPassword => 'RESET_PASSWORD',
     AuditAction.delete => 'DELETE',
+    AuditAction.templateCreate => 'TEMPLATE_CREATE',
+    AuditAction.templateUpdate => 'TEMPLATE_UPDATE',
+    AuditAction.templateDelete => 'TEMPLATE_DELETE',
   };
 
   static AuditAction fromString(String s) => switch (s) {
@@ -25,6 +31,9 @@ enum AuditAction {
     'DEACTIVATE' => AuditAction.deactivate,
     'RESET_PASSWORD' => AuditAction.resetPassword,
     'DELETE' => AuditAction.delete,
+    'TEMPLATE_CREATE' => AuditAction.templateCreate,
+    'TEMPLATE_UPDATE' => AuditAction.templateUpdate,
+    'TEMPLATE_DELETE' => AuditAction.templateDelete,
     _ => AuditAction.update,
   };
 }

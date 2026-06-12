@@ -12,6 +12,7 @@ import '../features/stands/stand_3_screen.dart';
 import '../features/stands/stand_4_screen.dart';
 import '../features/stands/stand_5_screen.dart';
 import '../features/stands/stand_test_screen.dart';
+import '../features/stands/compressor_params_screen.dart';
 import '../features/stands/motor_params_unloaded_screen.dart';
 import '../features/stands/stand_unloaded_result_screen.dart';
 import '../shared/providers/auth_provider.dart';
@@ -86,6 +87,7 @@ class _AuthGuard extends StatelessWidget {
       kRouteStand3 => const Stand3Screen(),
       kRouteStand4 => const Stand4Screen(),
       kRouteStand5 => const Stand5Screen(),
+      kRouteStand5Compressor => const CompressorParamsScreen(),
       kRouteStand1Loaded   => const StandTestScreen(standTitleKey: 'stand_1_title', testTypeKey: 'stand_test_loaded'),
       kRouteStand2Loaded   => const StandTestScreen(standTitleKey: 'stand_2_title', testTypeKey: 'stand_test_loaded'),
       kRouteStand3Loaded   => const StandTestScreen(standTitleKey: 'stand_3_title', testTypeKey: 'stand_test_loaded'),
