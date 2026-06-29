@@ -9,7 +9,11 @@ class SettingsRepository {
   /// Возвращает настройки пользователя. Создаёт запись если нет.
   Future<UserSettings> getByUserId(int userId) async {
     final db = await _db.database;
-    final rows = await db.query('settings', where: 'user_id = ?', whereArgs: [userId]);
+    final rows = await db.query(
+      'settings',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
     if (rows.isNotEmpty) return UserSettings.fromMap(rows.first);
 
     // Создаём дефолтные настройки

@@ -5,7 +5,8 @@ import '../constants/config.dart';
 class TempPasswordGenerator {
   static final Random _random = Random.secure();
 
-  static const String _letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  static const String _letters =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   static const String _digits = '0123456789';
   static const String _all = _letters + _digits;
 

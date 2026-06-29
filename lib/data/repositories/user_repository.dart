@@ -55,20 +55,22 @@ class UserRepository {
     final id = await db.insert('users', user.toMap());
     final created = user.copyWith(id: id);
 
-    await _audit.add(AuditLog(
-      action: AuditAction.create,
-      performedById: performerId,
-      performedByName: performerName,
-      targetUserId: id,
-      targetUserName: created.fullName,
-      changesJson: jsonEncode({
-        'first_name': {'to': created.firstName},
-        'last_name': {'to': created.lastName},
-        'username': {'to': created.username},
-        'role': {'to': created.role.toDbString()},
-      }),
-      createdAt: DateTime.now(),
-    ));
+    await _audit.add(
+      AuditLog(
+        action: AuditAction.create,
+        performedById: performerId,
+        performedByName: performerName,
+        targetUserId: id,
+        targetUserName: created.fullName,
+        changesJson: jsonEncode({
+          'first_name': {'to': created.firstName},
+          'last_name': {'to': created.lastName},
+          'username': {'to': created.username},
+          'role': {'to': created.role.toDbString()},
+        }),
+        createdAt: DateTime.now(),
+      ),
+    );
 
     return created;
   }
@@ -94,7 +96,10 @@ class UserRepository {
     // Собираем только изменённые поля
     final changes = <String, Map<String, String>>{};
     if (existing.firstName != user.firstName) {
-      changes['first_name'] = {'from': existing.firstName, 'to': user.firstName};
+      changes['first_name'] = {
+        'from': existing.firstName,
+        'to': user.firstName,
+      };
     }
     if (existing.lastName != user.lastName) {
       changes['last_name'] = {'from': existing.lastName, 'to': user.lastName};
@@ -124,15 +129,17 @@ class UserRepository {
     );
 
     if (changes.isNotEmpty) {
-      await _audit.add(AuditLog(
-        action: AuditAction.update,
-        performedById: requesterUserId,
-        performedByName: requesterName,
-        targetUserId: user.id!,
-        targetUserName: user.fullName,
-        changesJson: jsonEncode(changes),
-        createdAt: DateTime.now(),
-      ));
+      await _audit.add(
+        AuditLog(
+          action: AuditAction.update,
+          performedById: requesterUserId,
+          performedByName: requesterName,
+          targetUserId: user.id!,
+          targetUserName: user.fullName,
+          changesJson: jsonEncode(changes),
+          createdAt: DateTime.now(),
+        ),
+      );
     }
   }
 
@@ -187,20 +194,22 @@ class UserRepository {
       whereArgs: [targetUserId],
     );
 
-    await _audit.add(AuditLog(
-      action: isActive ? AuditAction.activate : AuditAction.deactivate,
-      performedById: requesterUserId,
-      performedByName: requesterName,
-      targetUserId: targetUserId,
-      targetUserName: target?.fullName ?? '—',
-      changesJson: jsonEncode({
-        'is_active': {
-          'from': isActive ? '0' : '1',
-          'to': isActive ? '1' : '0',
-        },
-      }),
-      createdAt: DateTime.now(),
-    ));
+    await _audit.add(
+      AuditLog(
+        action: isActive ? AuditAction.activate : AuditAction.deactivate,
+        performedById: requesterUserId,
+        performedByName: requesterName,
+        targetUserId: targetUserId,
+        targetUserName: target?.fullName ?? '—',
+        changesJson: jsonEncode({
+          'is_active': {
+            'from': isActive ? '0' : '1',
+            'to': isActive ? '1' : '0',
+          },
+        }),
+        createdAt: DateTime.now(),
+      ),
+    );
   }
 
   /// Сбрасывает пароль пользователя на временный. Только для ADMIN.
@@ -224,15 +233,17 @@ class UserRepository {
     );
 
     final target = await findById(targetUserId);
-    await _audit.add(AuditLog(
-      action: AuditAction.resetPassword,
-      performedById: requesterUserId,
-      performedByName: requesterName,
-      targetUserId: targetUserId,
-      targetUserName: target?.fullName ?? '—',
-      changesJson: null,
-      createdAt: DateTime.now(),
-    ));
+    await _audit.add(
+      AuditLog(
+        action: AuditAction.resetPassword,
+        performedById: requesterUserId,
+        performedByName: requesterName,
+        targetUserId: targetUserId,
+        targetUserName: target?.fullName ?? '—',
+        changesJson: null,
+        createdAt: DateTime.now(),
+      ),
+    );
 
     return tempPassword;
   }
@@ -269,15 +280,17 @@ class UserRepository {
       whereArgs: [targetUserId],
     );
 
-    await _audit.add(AuditLog(
-      action: AuditAction.delete,
-      performedById: requesterUserId,
-      performedByName: requesterName,
-      targetUserId: targetUserId,
-      targetUserName: target?.fullName ?? '—',
-      changesJson: null,
-      createdAt: now,
-    ));
+    await _audit.add(
+      AuditLog(
+        action: AuditAction.delete,
+        performedById: requesterUserId,
+        performedByName: requesterName,
+        targetUserId: targetUserId,
+        targetUserName: target?.fullName ?? '—',
+        changesJson: null,
+        createdAt: now,
+      ),
+    );
   }
 
   /// Проверяет, что targetUserId — не последний активный не удалённый ADMIN
@@ -292,7 +305,9 @@ class UserRepository {
       whereArgs: [kRoleAdmin, targetUserId],
     );
     if (rows.isEmpty) {
-      throw Exception('Нельзя удалить/деактивировать последнего активного администратора');
+      throw Exception(
+        'Нельзя удалить/деактивировать последнего активного администратора',
+      );
     }
   }
 }

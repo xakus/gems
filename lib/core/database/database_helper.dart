@@ -73,6 +73,7 @@ class DatabaseHelper {
 
     await _createAuditLogTable(db);
     await _createCompressorTemplatesTable(db);
+    await _createTestTables(db);
 
     await db.insert('app_meta', {'key': kMetaDbVersion, 'value': '$version'});
     await db.insert('app_meta', {'key': kMetaFirstRun, 'value': 'true'});
@@ -98,6 +99,60 @@ class DatabaseHelper {
         receiver_volume_l  REAL    NOT NULL,
         created_at         TEXT    NOT NULL,
         updated_at         TEXT    NOT NULL
+      )
+    ''');
+  }
+
+  /// Создаёт таблицы модуля тестирования двигателей:
+  /// test_runs — метаданные запусков, test_measurements — тайм-серия измерений,
+  /// test_events — журнал событий теста (для архива и отчётов).
+  Future<void> _createTestTables(Database db) async {
+    // Запуски тестов: один ряд = один проведённый тест
+    await db.execute('''
+      CREATE TABLE test_runs (
+        id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+        stand_id           INTEGER NOT NULL,
+        test_mode          TEXT    NOT NULL,
+        power_kwt          REAL    NOT NULL,
+        voltage_v          REAL    NOT NULL,
+        current_a          REAL    NOT NULL,
+        speed_rpm          REAL    NOT NULL,
+        frequency_hz       REAL    NOT NULL,
+        status             TEXT    NOT NULL,
+        error_code         TEXT,
+        insulation_mohm    REAL,
+        winding_resistance REAL,
+        started_by_id      INTEGER NOT NULL,
+        started_by_name    TEXT    NOT NULL,
+        started_at         TEXT    NOT NULL,
+        finished_at        TEXT
+      )
+    ''');
+
+    // Измерения (тайм-серия) — для графиков и отчётов
+    await db.execute('''
+      CREATE TABLE test_measurements (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id      INTEGER NOT NULL REFERENCES test_runs(id) ON DELETE CASCADE,
+        metric      TEXT    NOT NULL,
+        value       REAL    NOT NULL,
+        unit        TEXT    NOT NULL,
+        recorded_at TEXT    NOT NULL
+      )
+    ''');
+    await db.execute(
+      'CREATE INDEX idx_measurements_run_metric '
+      'ON test_measurements(run_id, metric)',
+    );
+
+    // Журнал событий теста (старт, успех фазы 1, ошибка, экстренный стоп, финиш)
+    await db.execute('''
+      CREATE TABLE test_events (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id     INTEGER NOT NULL REFERENCES test_runs(id) ON DELETE CASCADE,
+        event_type TEXT    NOT NULL,
+        message    TEXT,
+        created_at TEXT    NOT NULL
       )
     ''');
   }
@@ -134,11 +189,15 @@ class DatabaseHelper {
       await _createCompressorTemplatesTable(db);
     }
 
-    await db.insert(
-      'app_meta',
-      {'key': kMetaDbVersion, 'value': '$newVersion'},
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    // v3 → v4: таблицы модуля тестирования двигателей
+    if (oldVersion < 4) {
+      await _createTestTables(db);
+    }
+
+    await db.insert('app_meta', {
+      'key': kMetaDbVersion,
+      'value': '$newVersion',
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   /// Создаёт дефолтного ADMIN с временным паролем
@@ -190,7 +249,11 @@ class DatabaseHelper {
   /// Удаляет временный пароль из meta после показа
   Future<void> clearAdminTempPassword() async {
     final db = await database;
-    await db.delete('app_meta', where: 'key = ?', whereArgs: ['admin_temp_password']);
+    await db.delete(
+      'app_meta',
+      where: 'key = ?',
+      whereArgs: ['admin_temp_password'],
+    );
   }
 
   /// Возвращает значение из app_meta
@@ -203,10 +266,9 @@ class DatabaseHelper {
   /// Устанавливает значение в app_meta
   Future<void> setMeta(String key, String value) async {
     final db = await database;
-    await db.insert(
-      'app_meta',
-      {'key': key, 'value': value},
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert('app_meta', {
+      'key': key,
+      'value': value,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 }

@@ -29,15 +29,17 @@ class CompressorTemplateRepository {
     final id = await db.insert('compressor_templates', toInsert.toMap());
     final created = toInsert.copyWith(id: id);
 
-    await _audit.add(AuditLog(
-      action: AuditAction.templateCreate,
-      performedById: performedById,
-      performedByName: performedByName,
-      targetUserId: id,
-      targetUserName: created.name,
-      changesJson: jsonEncode(_templateToChanges(created)),
-      createdAt: now,
-    ));
+    await _audit.add(
+      AuditLog(
+        action: AuditAction.templateCreate,
+        performedById: performedById,
+        performedByName: performedByName,
+        targetUserId: id,
+        targetUserName: created.name,
+        changesJson: jsonEncode(_templateToChanges(created)),
+        createdAt: now,
+      ),
+    );
 
     return created;
   }
@@ -64,15 +66,17 @@ class CompressorTemplateRepository {
     );
 
     final diff = _diffTemplates(oldTemplate, updated);
-    await _audit.add(AuditLog(
-      action: AuditAction.templateUpdate,
-      performedById: performedById,
-      performedByName: performedByName,
-      targetUserId: oldTemplate.id!,
-      targetUserName: updated.name,
-      changesJson: diff.isNotEmpty ? jsonEncode(diff) : null,
-      createdAt: now,
-    ));
+    await _audit.add(
+      AuditLog(
+        action: AuditAction.templateUpdate,
+        performedById: performedById,
+        performedByName: performedByName,
+        targetUserId: oldTemplate.id!,
+        targetUserName: updated.name,
+        changesJson: diff.isNotEmpty ? jsonEncode(diff) : null,
+        createdAt: now,
+      ),
+    );
   }
 
   /// Удаляет шаблон и пишет аудит
@@ -88,21 +92,21 @@ class CompressorTemplateRepository {
       whereArgs: [template.id],
     );
 
-    await _audit.add(AuditLog(
-      action: AuditAction.templateDelete,
-      performedById: performedById,
-      performedByName: performedByName,
-      targetUserId: template.id!,
-      targetUserName: template.name,
-      changesJson: null,
-      createdAt: DateTime.now(),
-    ));
+    await _audit.add(
+      AuditLog(
+        action: AuditAction.templateDelete,
+        performedById: performedById,
+        performedByName: performedByName,
+        targetUserId: template.id!,
+        targetUserName: template.name,
+        changesJson: null,
+        createdAt: DateTime.now(),
+      ),
+    );
   }
 
   /// Формирует changes-map для CREATE (все поля → to)
-  Map<String, Map<String, String>> _templateToChanges(
-    CompressorTemplate t,
-  ) {
+  Map<String, Map<String, String>> _templateToChanges(CompressorTemplate t) {
     return {
       'name': {'to': t.name},
       'compressor_name': {'to': t.compressorName},
@@ -137,11 +141,31 @@ class CompressorTemplateRepository {
     check('voltage_v', old.voltageV.toString(), updated.voltageV.toString());
     check('current_a', old.currentA.toString(), updated.currentA.toString());
     check('speed_rpm', old.speedRpm.toString(), updated.speedRpm.toString());
-    check('frequency_hz', old.frequencyHz.toString(), updated.frequencyHz.toString());
-    check('productivity_l_min', old.productivityLMin.toString(), updated.productivityLMin.toString());
-    check('pressure_bar', old.pressureBar.toString(), updated.pressureBar.toString());
-    check('hold_time_min', old.holdTimeMin.toString(), updated.holdTimeMin.toString());
-    check('receiver_volume_l', old.receiverVolumeL.toString(), updated.receiverVolumeL.toString());
+    check(
+      'frequency_hz',
+      old.frequencyHz.toString(),
+      updated.frequencyHz.toString(),
+    );
+    check(
+      'productivity_l_min',
+      old.productivityLMin.toString(),
+      updated.productivityLMin.toString(),
+    );
+    check(
+      'pressure_bar',
+      old.pressureBar.toString(),
+      updated.pressureBar.toString(),
+    );
+    check(
+      'hold_time_min',
+      old.holdTimeMin.toString(),
+      updated.holdTimeMin.toString(),
+    );
+    check(
+      'receiver_volume_l',
+      old.receiverVolumeL.toString(),
+      updated.receiverVolumeL.toString(),
+    );
 
     return diff;
   }

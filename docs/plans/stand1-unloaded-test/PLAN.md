@@ -207,18 +207,18 @@ created_at TEXT    NOT NULL
 
 ## 12. Чеклист выполнения (отмечать по ходу)
 
-- [ ] 2. БД: `kDatabaseVersion=4`, `_createTestTables`, миграция `_onUpgrade`
-- [ ] 3. Модели: MotorParams, TestRun(+enums), TestMeasurement(+enum), TestEvent(+enum)
-- [ ] 4. `TestRepository` (create/addMeasurement/addEvent/finish/getters)
-- [ ] 5. ПЛС: `plc_models`, `PlcDataSource`, `MockPlcDataSource`
-- [ ] 6. `TestController`
-- [ ] 7. UI: экран теста + ommeter_phase_card + metric_card(график) + error_overlay
-- [ ] 8. Навигация/конфиг: маршрут, передача аргументов, кнопка «Старт», router
-- [ ] 9. Локализация en/az/ru
-- [ ] 10. `fl_chart` в pubspec + pub get
-- [ ] 11. Документация: SPECIFICATION.md, CLAUDE.md, этот PLAN.md
-- [ ] 12. Проверка: `flutter analyze` чисто, `dart format`, `flutter run -d linux` —
-        успешный прогон / смоделированная авария / экстренный стоп; проверить записи в БД и блокировку «назад»
+- [x] 2. БД: `kDatabaseVersion=4`, `_createTestTables`, миграция `_onUpgrade`
+- [x] 3. Модели: MotorParams, TestRun(+enums), TestMeasurement(+enum), TestEvent(+enum)
+- [x] 4. `TestRepository` (create/addMeasurement/addEvent/finish/getters)
+- [x] 5. ПЛС: `plc_models`, `PlcDataSource`, `MockPlcDataSource`
+- [x] 6. `TestController`
+- [x] 7. UI: экран теста + ommeter_phase_card + metric_card(график) + error_overlay
+- [x] 8. Навигация/конфиг: маршрут, передача аргументов, кнопка «Старт», router
+- [x] 9. Локализация en/az/ru
+- [x] 10. `fl_chart` в pubspec + pub get
+- [x] 11. Документация: SPECIFICATION.md, CLAUDE.md, этот PLAN.md
+- [~] 12. Проверка: `flutter analyze` чисто ✅, `dart format` ✅, сборка `flutter build linux` —
+        ⏳ ручной прогон (успех / авария / экстренный стоп) за оператором
 
 ---
 

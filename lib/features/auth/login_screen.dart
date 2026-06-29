@@ -52,9 +52,7 @@ class _LoginScreenState extends State<LoginScreen>
       TweenSequenceItem(tween: Tween(begin: 10.0, end: -6.0), weight: 2),
       TweenSequenceItem(tween: Tween(begin: -6.0, end: 6.0), weight: 2),
       TweenSequenceItem(tween: Tween(begin: 6.0, end: 0.0), weight: 1),
-    ]).animate(
-      CurvedAnimation(parent: _shakeController, curve: Curves.linear),
-    );
+    ]).animate(CurvedAnimation(parent: _shakeController, curve: Curves.linear));
   }
 
   @override
@@ -170,10 +168,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: Center(
                     child: Column(
                       children: [
-                        Hero(
-                          tag: 'amotes_logo',
-                          child: AmotesLogo(size: 180),
-                        ),
+                        Hero(tag: 'amotes_logo', child: AmotesLogo(size: 180)),
                         const SizedBox(height: 5),
                         Hero(
                           tag: 'amotes_title',
@@ -221,8 +216,9 @@ class _LoginScreenState extends State<LoginScreen>
                         vertical: kPaddingSmall,
                       ),
                       child: ConstrainedBox(
-                        constraints:
-                            const BoxConstraints(maxWidth: kFormMaxWidth),
+                        constraints: const BoxConstraints(
+                          maxWidth: kFormMaxWidth,
+                        ),
                         child: AnimatedBuilder(
                           animation: _shakeAnimation,
                           builder: (context, child) => Transform.translate(
@@ -234,9 +230,7 @@ class _LoginScreenState extends State<LoginScreen>
                             children: [
                               Text(
                                 l10n.tr('login_title'),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
+                                style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: isDark
                                           ? AppColors.darkSecondaryText
@@ -256,18 +250,19 @@ class _LoginScreenState extends State<LoginScreen>
                                         TextFormField(
                                           controller: _usernameCtrl,
                                           decoration: InputDecoration(
-                                            labelText:
-                                                l10n.tr('login_username'),
+                                            labelText: l10n.tr(
+                                              'login_username',
+                                            ),
                                             prefixIcon: const Icon(
                                               Icons.person_outline,
                                             ),
                                           ),
-                                          textInputAction:
-                                              TextInputAction.next,
+                                          textInputAction: TextInputAction.next,
                                           validator: Validators.username,
                                           onFieldSubmitted: (_) =>
-                                              FocusScope.of(context)
-                                                  .nextFocus(),
+                                              FocusScope.of(
+                                                context,
+                                              ).nextFocus(),
                                         ),
 
                                         const SizedBox(height: 16),
@@ -276,8 +271,9 @@ class _LoginScreenState extends State<LoginScreen>
                                           controller: _passwordCtrl,
                                           obscureText: !_passwordVisible,
                                           decoration: InputDecoration(
-                                            labelText:
-                                                l10n.tr('login_password'),
+                                            labelText: l10n.tr(
+                                              'login_password',
+                                            ),
                                             prefixIcon: const Icon(
                                               Icons.lock_outline,
                                             ),
@@ -293,13 +289,11 @@ class _LoginScreenState extends State<LoginScreen>
                                               ),
                                             ),
                                           ),
-                                          textInputAction:
-                                              TextInputAction.done,
+                                          textInputAction: TextInputAction.done,
                                           validator: (v) =>
                                               (v == null || v.isEmpty)
-                                                  ? l10n.tr(
-                                                      'validation_required')
-                                                  : null,
+                                              ? l10n.tr('validation_required')
+                                              : null,
                                           onFieldSubmitted: (_) => _submit(),
                                         ),
 
@@ -308,27 +302,28 @@ class _LoginScreenState extends State<LoginScreen>
                                         SizedBox(
                                           width: double.infinity,
                                           child: ElevatedButton(
-                                            onPressed:
-                                                _submitting ? null : _submit,
+                                            onPressed: _submitting
+                                                ? null
+                                                : _submit,
                                             child: _submitting
                                                 ? const SizedBox(
                                                     height: 20,
                                                     width: 20,
                                                     child:
                                                         CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                      color: Colors.white,
-                                                    ),
+                                                          strokeWidth: 2,
+                                                          color: Colors.white,
+                                                        ),
                                                   )
-                                                : Text(
-                                                    l10n.tr('login_button')),
+                                                : Text(l10n.tr('login_button')),
                                           ),
                                         ),
 
                                         if (_errorMessage != null)
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                top: 12),
+                                              top: 12,
+                                            ),
                                             child: Row(
                                               children: [
                                                 const Icon(

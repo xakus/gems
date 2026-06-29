@@ -6,22 +6,16 @@ import '../repositories/user_repository.dart';
 import '../repositories/settings_repository.dart';
 
 /// Результат попытки входа
-enum LoginResult {
-  success,
-  invalidCredentials,
-  accountDisabled,
-}
+enum LoginResult { success, invalidCredentials, accountDisabled }
 
 /// Сервис аутентификации. Вся логика входа/выхода — здесь.
 class AuthService {
   final UserRepository _userRepo;
   final SettingsRepository _settingsRepo;
 
-  AuthService({
-    UserRepository? userRepo,
-    SettingsRepository? settingsRepo,
-  })  : _userRepo = userRepo ?? UserRepository(),
-        _settingsRepo = settingsRepo ?? SettingsRepository();
+  AuthService({UserRepository? userRepo, SettingsRepository? settingsRepo})
+    : _userRepo = userRepo ?? UserRepository(),
+      _settingsRepo = settingsRepo ?? SettingsRepository();
 
   /// Пытается войти. Возвращает пару (результат, сессия или null).
   Future<({LoginResult result, Session? session})> login(
@@ -35,7 +29,11 @@ class AuthService {
     if (!user.isActive) {
       return (result: LoginResult.accountDisabled, session: null);
     }
-    final valid = PasswordHasher.verify(password, user.passwordSalt, user.passwordHash);
+    final valid = PasswordHasher.verify(
+      password,
+      user.passwordSalt,
+      user.passwordHash,
+    );
     if (!valid) {
       return (result: LoginResult.invalidCredentials, session: null);
     }

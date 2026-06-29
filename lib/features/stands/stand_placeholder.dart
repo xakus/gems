@@ -24,25 +24,28 @@ class StandPlaceholder extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset(
-            image,
-            width: 160,
-            height: 160,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) => Icon(
-              Icons.electric_bolt_rounded,
-              size: 72,
-              color: AppColors.primary,
-            ),
-          ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.85, 0.85)),
+                image,
+                width: 160,
+                height: 160,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => Icon(
+                  Icons.electric_bolt_rounded,
+                  size: 72,
+                  color: AppColors.primary,
+                ),
+              )
+              .animate()
+              .fadeIn(duration: 400.ms)
+              .scale(begin: const Offset(0.85, 0.85)),
 
           const SizedBox(height: 24),
 
           Text(
             loc.tr(titleKey),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: AppColors.primary,
+              fontWeight: FontWeight.bold,
+            ),
           ).animate().fadeIn(delay: 150.ms),
 
           const SizedBox(height: 8),
@@ -50,8 +53,10 @@ class StandPlaceholder extends StatelessWidget {
           Text(
             loc.tr(subtitleKey),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
           ).animate().fadeIn(delay: 200.ms),
 
           const SizedBox(height: 32),
@@ -61,13 +66,15 @@ class StandPlaceholder extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+              border: Border.all(
+                color: AppColors.primary.withValues(alpha: 0.2),
+              ),
             ),
             child: Text(
               loc.tr('stand_coming_soon'),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.primary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.primary),
             ),
           ).animate().fadeIn(delay: 300.ms),
         ],

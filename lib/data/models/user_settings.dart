@@ -19,11 +19,7 @@ class UserSettings {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'user_id': userId,
-      'theme': theme,
-      'language': language,
-    };
+    return {'user_id': userId, 'theme': theme, 'language': language};
   }
 
   UserSettings copyWith({String? theme, String? language}) {

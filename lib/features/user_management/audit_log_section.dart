@@ -11,9 +11,9 @@ import '../../data/models/audit_log.dart';
 import '../../data/repositories/audit_repository.dart';
 
 // Фиксированные ширины колонок таблицы
-const _kDateW  = 108.0;
+const _kDateW = 108.0;
 const _kBadgeW = 140.0;
-const _kRowH   = 50.0;
+const _kRowH = 50.0;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Основной виджет
@@ -28,13 +28,13 @@ class AuditLogSection extends StatefulWidget {
 }
 
 class _AuditLogSectionState extends State<AuditLogSection> {
-  final _repo       = AuditRepository();
+  final _repo = AuditRepository();
   final _searchCtrl = TextEditingController();
 
-  List<AuditLog> _allLogs  = [];
+  List<AuditLog> _allLogs = [];
   List<AuditLog> _filtered = [];
-  AuditAction?   _actionFilter;
-  bool _loading  = true;
+  AuditAction? _actionFilter;
+  bool _loading = true;
   bool _exporting = false;
 
   @override
@@ -84,8 +84,8 @@ class _AuditLogSectionState extends State<AuditLogSection> {
   // ── PDF экспорт ───────────────────────────────────────────────────────────
 
   Future<void> _exportPdf() async {
-    final l10n   = AppLocalizations.of(context);
-    final logs   = List<AuditLog>.from(_filtered);
+    final l10n = AppLocalizations.of(context);
+    final logs = List<AuditLog>.from(_filtered);
     final labels = _fieldLabels(l10n);
     setState(() => _exporting = true);
     try {
@@ -99,16 +99,16 @@ class _AuditLogSectionState extends State<AuditLogSection> {
   }
 
   static Future<Uint8List> _buildPdfBytes(
-    List<AuditLog>      logs,
-    AppLocalizations     l10n,
+    List<AuditLog> logs,
+    AppLocalizations l10n,
     Map<String, String> fieldLabels,
-    PdfPageFormat       format,
+    PdfPageFormat format,
   ) async {
     final doc = pw.Document();
 
     final baseData = await rootBundle.load('assets/fonts/NotoSans-Regular.ttf');
     final boldData = await rootBundle.load('assets/fonts/NotoSans-Bold.ttf');
-    final font     = pw.Font.ttf(baseData);
+    final font = pw.Font.ttf(baseData);
     final boldFont = pw.Font.ttf(boldData);
 
     doc.addPage(
@@ -125,12 +125,18 @@ class _AuditLogSectionState extends State<AuditLogSection> {
                 pw.Text(
                   l10n.tr('audit_pdf_title'),
                   style: pw.TextStyle(
-                    font: boldFont, fontSize: 15, color: PdfColors.blue800,
+                    font: boldFont,
+                    fontSize: 15,
+                    color: PdfColors.blue800,
                   ),
                 ),
                 pw.Text(
                   _fmtDt(DateTime.now()),
-                  style: pw.TextStyle(font: font, fontSize: 9, color: PdfColors.grey600),
+                  style: pw.TextStyle(
+                    font: font,
+                    fontSize: 9,
+                    color: PdfColors.grey600,
+                  ),
                 ),
               ],
             ),
@@ -148,20 +154,29 @@ class _AuditLogSectionState extends State<AuditLogSection> {
               l10n.tr('audit_target_user'),
               l10n.tr('audit_changes'),
             ],
-            data: logs.map((log) => [
-              _fmtDt(log.createdAt),
-              _actionStr(log.action, l10n),
-              log.performedByName,
-              log.targetUserName,
-              _changesFlat(log.changes, fieldLabels),
-            ]).toList(),
+            data: logs
+                .map(
+                  (log) => [
+                    _fmtDt(log.createdAt),
+                    _actionStr(log.action, l10n),
+                    log.performedByName,
+                    log.targetUserName,
+                    _changesFlat(log.changes, fieldLabels),
+                  ],
+                )
+                .toList(),
             headerStyle: pw.TextStyle(
-              font: boldFont, fontSize: 9, color: PdfColors.white,
+              font: boldFont,
+              fontSize: 9,
+              color: PdfColors.white,
             ),
             headerDecoration: const pw.BoxDecoration(color: PdfColors.blue800),
             cellStyle: pw.TextStyle(font: font, fontSize: 8),
             oddRowDecoration: const pw.BoxDecoration(color: PdfColors.grey50),
-            cellPadding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+            cellPadding: const pw.EdgeInsets.symmetric(
+              horizontal: 6,
+              vertical: 5,
+            ),
             columnWidths: {
               0: const pw.FixedColumnWidth(68),
               1: const pw.FixedColumnWidth(96),
@@ -187,39 +202,39 @@ class _AuditLogSectionState extends State<AuditLogSection> {
   // ── Вспомогательные (статические) ────────────────────────────────────────
 
   static Map<String, String> _fieldLabels(AppLocalizations l10n) => {
-    'first_name':         l10n.tr('audit_field_first_name'),
-    'last_name':          l10n.tr('audit_field_last_name'),
-    'username':           l10n.tr('audit_field_username'),
-    'role':               l10n.tr('audit_field_role'),
-    'is_active':          l10n.tr('audit_field_is_active'),
-    'name':               l10n.tr('audit_field_name'),
-    'compressor_name':    l10n.tr('audit_field_compressor_name'),
-    'power_kwt':          l10n.tr('audit_field_power_kwt'),
-    'voltage_v':          l10n.tr('audit_field_voltage_v'),
-    'current_a':          l10n.tr('audit_field_current_a'),
-    'speed_rpm':          l10n.tr('audit_field_speed_rpm'),
-    'frequency_hz':       l10n.tr('audit_field_frequency_hz'),
+    'first_name': l10n.tr('audit_field_first_name'),
+    'last_name': l10n.tr('audit_field_last_name'),
+    'username': l10n.tr('audit_field_username'),
+    'role': l10n.tr('audit_field_role'),
+    'is_active': l10n.tr('audit_field_is_active'),
+    'name': l10n.tr('audit_field_name'),
+    'compressor_name': l10n.tr('audit_field_compressor_name'),
+    'power_kwt': l10n.tr('audit_field_power_kwt'),
+    'voltage_v': l10n.tr('audit_field_voltage_v'),
+    'current_a': l10n.tr('audit_field_current_a'),
+    'speed_rpm': l10n.tr('audit_field_speed_rpm'),
+    'frequency_hz': l10n.tr('audit_field_frequency_hz'),
     'productivity_l_min': l10n.tr('audit_field_productivity_l_min'),
-    'pressure_bar':       l10n.tr('audit_field_pressure_bar'),
-    'hold_time_min':      l10n.tr('audit_field_hold_time_min'),
-    'receiver_volume_l':  l10n.tr('audit_field_receiver_volume_l'),
+    'pressure_bar': l10n.tr('audit_field_pressure_bar'),
+    'hold_time_min': l10n.tr('audit_field_hold_time_min'),
+    'receiver_volume_l': l10n.tr('audit_field_receiver_volume_l'),
   };
 
   static String _fmtDt(DateTime dt) {
-    final d  = dt.day.toString().padLeft(2, '0');
+    final d = dt.day.toString().padLeft(2, '0');
     final mo = dt.month.toString().padLeft(2, '0');
-    final h  = dt.hour.toString().padLeft(2, '0');
+    final h = dt.hour.toString().padLeft(2, '0');
     final mi = dt.minute.toString().padLeft(2, '0');
     return '$d.$mo.${dt.year} $h:$mi';
   }
 
   static String _actionStr(AuditAction a, AppLocalizations l) => switch (a) {
-    AuditAction.create         => l.tr('audit_action_create'),
-    AuditAction.update         => l.tr('audit_action_update'),
-    AuditAction.activate       => l.tr('audit_action_activate'),
-    AuditAction.deactivate     => l.tr('audit_action_deactivate'),
-    AuditAction.resetPassword  => l.tr('audit_action_reset_password'),
-    AuditAction.delete         => l.tr('audit_action_delete'),
+    AuditAction.create => l.tr('audit_action_create'),
+    AuditAction.update => l.tr('audit_action_update'),
+    AuditAction.activate => l.tr('audit_action_activate'),
+    AuditAction.deactivate => l.tr('audit_action_deactivate'),
+    AuditAction.resetPassword => l.tr('audit_action_reset_password'),
+    AuditAction.delete => l.tr('audit_action_delete'),
     AuditAction.templateCreate => l.tr('audit_action_template_create'),
     AuditAction.templateUpdate => l.tr('audit_action_template_update'),
     AuditAction.templateDelete => l.tr('audit_action_template_delete'),
@@ -230,12 +245,14 @@ class _AuditLogSectionState extends State<AuditLogSection> {
     Map<String, String> fieldLabels,
   ) {
     if (ch == null || ch.isEmpty) return '—';
-    return ch.entries.map((e) {
-      final f    = fieldLabels[e.key] ?? e.key;
-      final from = e.value['from'];
-      final to   = e.value['to'] ?? '';
-      return (from == null || from.isEmpty) ? '$f: $to' : '$f: $from → $to';
-    }).join('  |  ');
+    return ch.entries
+        .map((e) {
+          final f = fieldLabels[e.key] ?? e.key;
+          final from = e.value['from'];
+          final to = e.value['to'] ?? '';
+          return (from == null || from.isEmpty) ? '$f: $to' : '$f: $from → $to';
+        })
+        .join('  |  ');
   }
 
   // ── Детальный диалог ──────────────────────────────────────────────────────
@@ -256,7 +273,7 @@ class _AuditLogSectionState extends State<AuditLogSection> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n  = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Padding(
@@ -264,7 +281,6 @@ class _AuditLogSectionState extends State<AuditLogSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           // Шапка ─────────────────────────────────────────────────────────
           Row(
             children: [
@@ -288,14 +304,18 @@ class _AuditLogSectionState extends State<AuditLogSection> {
                     prefixIcon: const Icon(Icons.search_rounded, size: 17),
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     suffixIcon: _searchCtrl.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear_rounded, size: 15),
                             onPressed: () => _searchCtrl.clear(),
                             padding: EdgeInsets.zero,
-                            constraints:
-                                const BoxConstraints(minWidth: 32, minHeight: 32),
+                            constraints: const BoxConstraints(
+                              minWidth: 32,
+                              minHeight: 32,
+                            ),
                           )
                         : null,
                   ),
@@ -307,14 +327,19 @@ class _AuditLogSectionState extends State<AuditLogSection> {
               FilledButton.icon(
                 icon: _exporting
                     ? const SizedBox(
-                        width: 14, height: 14,
+                        width: 14,
+                        height: 14,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white),
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : const Icon(Icons.picture_as_pdf_rounded, size: 16),
                 label: Text(l10n.tr('audit_download_pdf')),
                 style: FilledButton.styleFrom(backgroundColor: AppColors.error),
-                onPressed: (_exporting || _filtered.isEmpty) ? null : _exportPdf,
+                onPressed: (_exporting || _filtered.isEmpty)
+                    ? null
+                    : _exportPdf,
               ).animate(delay: 100.ms).fadeIn(),
               const SizedBox(width: 8),
 
@@ -342,12 +367,12 @@ class _AuditLogSectionState extends State<AuditLogSection> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _filtered.isEmpty
-                    ? _EmptyState(
-                        text: _allLogs.isEmpty
-                            ? l10n.tr('audit_no_logs')
-                            : l10n.tr('audit_no_match'),
-                      )
-                    : _LogTable(logs: _filtered, onRowTap: _openDetail),
+                ? _EmptyState(
+                    text: _allLogs.isEmpty
+                        ? l10n.tr('audit_no_logs')
+                        : l10n.tr('audit_no_match'),
+                  )
+                : _LogTable(logs: _filtered, onRowTap: _openDetail),
           ),
         ],
       ),
@@ -360,7 +385,7 @@ class _AuditLogSectionState extends State<AuditLogSection> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _FilterBar extends StatelessWidget {
-  final AuditAction?              selected;
+  final AuditAction? selected;
   final ValueChanged<AuditAction?> onSelect;
 
   const _FilterBar({required this.selected, required this.onSelect});
@@ -368,19 +393,43 @@ class _FilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final cs   = Theme.of(context).colorScheme;
+    final cs = Theme.of(context).colorScheme;
 
     final chips = [
-      (null as AuditAction?,       l10n.tr('audit_filter_all'),           cs.primary),
-      (AuditAction.create,         l10n.tr('audit_action_create'),        AppColors.success),
-      (AuditAction.update,         l10n.tr('audit_action_update'),        AppColors.info),
-      (AuditAction.activate,       l10n.tr('audit_action_activate'),      AppColors.success),
-      (AuditAction.deactivate,     l10n.tr('audit_action_deactivate'),    AppColors.warning),
-      (AuditAction.resetPassword,  l10n.tr('audit_action_reset_password'),AppColors.warning),
-      (AuditAction.delete,         l10n.tr('audit_action_delete'),        AppColors.error),
-      (AuditAction.templateCreate, l10n.tr('audit_action_template_create'), AppColors.success),
-      (AuditAction.templateUpdate, l10n.tr('audit_action_template_update'), AppColors.info),
-      (AuditAction.templateDelete, l10n.tr('audit_action_template_delete'), AppColors.error),
+      (null as AuditAction?, l10n.tr('audit_filter_all'), cs.primary),
+      (AuditAction.create, l10n.tr('audit_action_create'), AppColors.success),
+      (AuditAction.update, l10n.tr('audit_action_update'), AppColors.info),
+      (
+        AuditAction.activate,
+        l10n.tr('audit_action_activate'),
+        AppColors.success,
+      ),
+      (
+        AuditAction.deactivate,
+        l10n.tr('audit_action_deactivate'),
+        AppColors.warning,
+      ),
+      (
+        AuditAction.resetPassword,
+        l10n.tr('audit_action_reset_password'),
+        AppColors.warning,
+      ),
+      (AuditAction.delete, l10n.tr('audit_action_delete'), AppColors.error),
+      (
+        AuditAction.templateCreate,
+        l10n.tr('audit_action_template_create'),
+        AppColors.success,
+      ),
+      (
+        AuditAction.templateUpdate,
+        l10n.tr('audit_action_template_update'),
+        AppColors.info,
+      ),
+      (
+        AuditAction.templateDelete,
+        l10n.tr('audit_action_template_delete'),
+        AppColors.error,
+      ),
     ];
 
     return SingleChildScrollView(
@@ -396,7 +445,10 @@ class _FilterBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: isSel
                       ? color.withValues(alpha: 0.14)
@@ -429,19 +481,21 @@ class _FilterBar extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _LogTable extends StatelessWidget {
-  final List<AuditLog>       logs;
+  final List<AuditLog> logs;
   final ValueChanged<AuditLog> onRowTap;
 
   const _LogTable({required this.logs, required this.onRowTap});
 
   @override
   Widget build(BuildContext context) {
-    final l10n   = AppLocalizations.of(context);
-    final cs     = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
+    final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     const headerStyle = TextStyle(
-      fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 0.2,
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0.2,
     );
 
     return Card(
@@ -454,14 +508,23 @@ class _LogTable extends StatelessWidget {
               color: cs.surfaceContainerHighest,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: _RowLayout(
-                date:    Text(l10n.tr('audit_date'),         style: headerStyle),
-                action:  Text(l10n.tr('audit_action'),       style: headerStyle),
-                by:      Text(l10n.tr('audit_performed_by'), style: headerStyle,
-                              overflow: TextOverflow.ellipsis),
-                target:  Text(l10n.tr('audit_target_user'),  style: headerStyle,
-                              overflow: TextOverflow.ellipsis),
-                changes: Text(l10n.tr('audit_changes'),      style: headerStyle,
-                              overflow: TextOverflow.ellipsis),
+                date: Text(l10n.tr('audit_date'), style: headerStyle),
+                action: Text(l10n.tr('audit_action'), style: headerStyle),
+                by: Text(
+                  l10n.tr('audit_performed_by'),
+                  style: headerStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                target: Text(
+                  l10n.tr('audit_target_user'),
+                  style: headerStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                changes: Text(
+                  l10n.tr('audit_changes'),
+                  style: headerStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
 
@@ -479,8 +542,8 @@ class _LogTable extends StatelessWidget {
                     color: i.isEven
                         ? Colors.transparent
                         : (isDark
-                            ? Colors.white.withValues(alpha: 0.02)
-                            : Colors.black.withValues(alpha: 0.015)),
+                              ? Colors.white.withValues(alpha: 0.02)
+                              : Colors.black.withValues(alpha: 0.015)),
                     child: InkWell(
                       onTap: () => onRowTap(log),
                       child: SizedBox(
@@ -507,11 +570,11 @@ class _LogTable extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _RowLayout extends StatelessWidget {
-  final Widget  date;
-  final Widget  action;
-  final Widget  by;
-  final Widget  target;
-  final Widget  changes;
+  final Widget date;
+  final Widget action;
+  final Widget by;
+  final Widget target;
+  final Widget changes;
   final Widget? trailing;
 
   const _RowLayout({
@@ -556,7 +619,8 @@ class _LogRowContent extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final dt = log.createdAt;
 
-    final dateStr = '${dt.day.toString().padLeft(2, '0')}.'
+    final dateStr =
+        '${dt.day.toString().padLeft(2, '0')}.'
         '${dt.month.toString().padLeft(2, '0')}.'
         '${dt.year}\n'
         '${dt.hour.toString().padLeft(2, '0')}:'
@@ -566,23 +630,23 @@ class _LogRowContent extends StatelessWidget {
     final ch = log.changes;
     final preview = ch == null || ch.isEmpty
         ? '—'
-        : ch.entries.map((e) {
-            final from = e.value['from'];
-            final to   = e.value['to'] ?? '';
-            return (from == null || from.isEmpty) ? to : '$from → $to';
-          }).join('  |  ');
+        : ch.entries
+              .map((e) {
+                final from = e.value['from'];
+                final to = e.value['to'] ?? '';
+                return (from == null || from.isEmpty) ? to : '$from → $to';
+              })
+              .join('  |  ');
 
     return _RowLayout(
-      date: Text(
-        dateStr,
-        style: const TextStyle(fontSize: 11, height: 1.35),
-      ),
+      date: Text(dateStr, style: const TextStyle(fontSize: 11, height: 1.35)),
       action: _ActionBadge(action: log.action),
       by: Row(
         children: [
           const Icon(
             Icons.admin_panel_settings_rounded,
-            size: 13, color: AppColors.accent,
+            size: 13,
+            color: AppColors.accent,
           ),
           const SizedBox(width: 4),
           Flexible(
@@ -637,8 +701,8 @@ class _EmptyState extends StatelessWidget {
           Text(
             text,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.outlineVariant,
-                ),
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
           ),
         ],
       ),
@@ -651,9 +715,9 @@ class _EmptyState extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _LogDetailDialog extends StatelessWidget {
-  final AuditLog           log;
+  final AuditLog log;
   final Map<String, String> fieldLabels;
-  final AppLocalizations   l10n;
+  final AppLocalizations l10n;
 
   const _LogDetailDialog({
     required this.log,
@@ -664,7 +728,8 @@ class _LogDetailDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dt = log.createdAt;
-    final dateStr = '${dt.day.toString().padLeft(2, '0')}.'
+    final dateStr =
+        '${dt.day.toString().padLeft(2, '0')}.'
         '${dt.month.toString().padLeft(2, '0')}.'
         '${dt.year}  '
         '${dt.hour.toString().padLeft(2, '0')}:'
@@ -694,13 +759,13 @@ class _LogDetailDialog extends StatelessWidget {
             children: [
               const SizedBox(height: 4),
               _DetailInfoRow(
-                icon:  Icons.admin_panel_settings_rounded,
+                icon: Icons.admin_panel_settings_rounded,
                 label: l10n.tr('audit_performed_by'),
                 value: log.performedByName,
               ),
               const SizedBox(height: 8),
               _DetailInfoRow(
-                icon:  Icons.person_outline_rounded,
+                icon: Icons.person_outline_rounded,
                 label: l10n.tr('audit_target_user'),
                 value: log.targetUserName,
               ),
@@ -713,7 +778,7 @@ class _LogDetailDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 _ChangesTable(
-                  changes:     changes,
+                  changes: changes,
                   fieldLabels: fieldLabels,
                   hasFrom: changes.values.any(
                     (v) => (v['from'] ?? '').isNotEmpty,
@@ -737,8 +802,8 @@ class _LogDetailDialog extends StatelessWidget {
 
 class _DetailInfoRow extends StatelessWidget {
   final IconData icon;
-  final String   label;
-  final String   value;
+  final String label;
+  final String value;
 
   const _DetailInfoRow({
     required this.icon,
@@ -762,9 +827,9 @@ class _DetailInfoRow extends StatelessWidget {
 
 class _ChangesTable extends StatelessWidget {
   final Map<String, Map<String, String>> changes;
-  final Map<String, String>              fieldLabels;
-  final bool                             hasFrom;
-  final AppLocalizations                 l10n;
+  final Map<String, String> fieldLabels;
+  final bool hasFrom;
+  final AppLocalizations l10n;
 
   const _ChangesTable({
     required this.changes,
@@ -788,10 +853,7 @@ class _ChangesTable extends StatelessWidget {
               1: FlexColumnWidth(2),
               2: FlexColumnWidth(2),
             }
-          : const {
-              0: FlexColumnWidth(2),
-              1: FlexColumnWidth(3),
-            },
+          : const {0: FlexColumnWidth(2), 1: FlexColumnWidth(3)},
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         // Заголовок
@@ -806,8 +868,8 @@ class _ChangesTable extends StatelessWidget {
         // Данные
         ...changes.entries.map((e) {
           final field = fieldLabels[e.key] ?? e.key;
-          final from  = e.value['from'] ?? '';
-          final to    = e.value['to']   ?? '';
+          final from = e.value['from'] ?? '';
+          final to = e.value['to'] ?? '';
           return TableRow(
             children: [
               _TCell(field, bold: true),
@@ -834,7 +896,7 @@ class _ChangesTable extends StatelessWidget {
 
 class _TCell extends StatelessWidget {
   final String text;
-  final bool   bold;
+  final bool bold;
   final Color? color;
 
   const _TCell(this.text, {this.bold = false, this.color});
@@ -869,15 +931,33 @@ class _ActionBadge extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     final (label, color) = switch (action) {
-      AuditAction.create         => (l10n.tr('audit_action_create'),          AppColors.success),
-      AuditAction.update         => (l10n.tr('audit_action_update'),          AppColors.info),
-      AuditAction.activate       => (l10n.tr('audit_action_activate'),        AppColors.success),
-      AuditAction.deactivate     => (l10n.tr('audit_action_deactivate'),      AppColors.warning),
-      AuditAction.resetPassword  => (l10n.tr('audit_action_reset_password'),  AppColors.warning),
-      AuditAction.delete         => (l10n.tr('audit_action_delete'),          AppColors.error),
-      AuditAction.templateCreate => (l10n.tr('audit_action_template_create'), AppColors.success),
-      AuditAction.templateUpdate => (l10n.tr('audit_action_template_update'), AppColors.info),
-      AuditAction.templateDelete => (l10n.tr('audit_action_template_delete'), AppColors.error),
+      AuditAction.create => (l10n.tr('audit_action_create'), AppColors.success),
+      AuditAction.update => (l10n.tr('audit_action_update'), AppColors.info),
+      AuditAction.activate => (
+        l10n.tr('audit_action_activate'),
+        AppColors.success,
+      ),
+      AuditAction.deactivate => (
+        l10n.tr('audit_action_deactivate'),
+        AppColors.warning,
+      ),
+      AuditAction.resetPassword => (
+        l10n.tr('audit_action_reset_password'),
+        AppColors.warning,
+      ),
+      AuditAction.delete => (l10n.tr('audit_action_delete'), AppColors.error),
+      AuditAction.templateCreate => (
+        l10n.tr('audit_action_template_create'),
+        AppColors.success,
+      ),
+      AuditAction.templateUpdate => (
+        l10n.tr('audit_action_template_update'),
+        AppColors.info,
+      ),
+      AuditAction.templateDelete => (
+        l10n.tr('audit_action_template_delete'),
+        AppColors.error,
+      ),
     };
 
     return Container(

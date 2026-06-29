@@ -45,11 +45,18 @@ class _CompressorTemplatesSectionState
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final hPad = ((constraints.maxWidth - kUsersMaxWidth) / 2)
-            .clamp(kPaddingLarge, double.infinity);
+        final hPad = ((constraints.maxWidth - kUsersMaxWidth) / 2).clamp(
+          kPaddingLarge,
+          double.infinity,
+        );
 
         return Padding(
-          padding: EdgeInsets.fromLTRB(hPad, kPaddingLarge, hPad, kPaddingLarge),
+          padding: EdgeInsets.fromLTRB(
+            hPad,
+            kPaddingLarge,
+            hPad,
+            kPaddingLarge,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -89,12 +96,12 @@ class _CompressorTemplatesSectionState
                         const SizedBox(height: 12),
                         Text(
                           loc.tr('compressor_templates_no_templates'),
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .outlineVariant,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outlineVariant,
+                              ),
                         ),
                       ],
                     ),
@@ -181,9 +188,7 @@ class _CompressorTemplatesSectionState
             child: Text(loc.tr('compressor_templates_cancel')),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.error,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () => Navigator.pop(context, true),
             child: Text(loc.tr('compressor_templates_delete')),
           ),
@@ -247,9 +252,7 @@ class _TemplatesTable extends StatelessWidget {
               DataColumn(label: Text(loc.tr('compressor_productivity'))),
               const DataColumn(label: Text('')),
             ],
-            rows: templates
-                .map((t) => _buildRow(context, t))
-                .toList(),
+            rows: templates.map((t) => _buildRow(context, t)).toList(),
           ),
         ),
       ),
@@ -261,7 +264,9 @@ class _TemplatesTable extends StatelessWidget {
 
     return DataRow(
       cells: [
-        DataCell(Text(t.name, style: const TextStyle(fontWeight: FontWeight.w600))),
+        DataCell(
+          Text(t.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+        ),
         DataCell(Text(t.compressorName)),
         DataCell(Text('${_fmt(t.powerKwt)} ${loc.tr('unit_kwt')}')),
         DataCell(Text('${_fmt(t.pressureBar)} ${loc.tr('unit_bar')}')),
@@ -329,18 +334,31 @@ class _TemplateDialogState extends State<_TemplateDialog> {
   void initState() {
     super.initState();
     final t = widget.template;
-    _tplNameCtrl     = TextEditingController(text: t?.name ?? '');
-    _nameCtrl        = TextEditingController(text: t?.compressorName ?? '');
-    _powerCtrl       = TextEditingController(text: t != null ? _fmt(t.powerKwt) : '');
-    _voltageCtrl     = TextEditingController(text: t != null ? _fmt(t.voltageV) : '');
-    _currentCtrl     = TextEditingController(text: t != null ? _fmt(t.currentA) : '');
-    _speedCtrl       = TextEditingController(text: t != null ? _fmt(t.speedRpm) : '');
-    _freqCtrl        = TextEditingController(text: t != null ? _fmt(t.frequencyHz) : '');
-    _productivityCtrl = TextEditingController(text: t != null ? _fmt(t.productivityLMin) : '');
-    _pressureCtrl    = TextEditingController(text: t != null ? _fmt(t.pressureBar) : '');
-    _holdTimeCtrl    = TextEditingController(
-        text: t != null && t.holdTimeMin > 0 ? _fmt(t.holdTimeMin) : '');
-    _receiverCtrl    = TextEditingController(text: t != null ? _fmt(t.receiverVolumeL) : '');
+    _tplNameCtrl = TextEditingController(text: t?.name ?? '');
+    _nameCtrl = TextEditingController(text: t?.compressorName ?? '');
+    _powerCtrl = TextEditingController(text: t != null ? _fmt(t.powerKwt) : '');
+    _voltageCtrl = TextEditingController(
+      text: t != null ? _fmt(t.voltageV) : '',
+    );
+    _currentCtrl = TextEditingController(
+      text: t != null ? _fmt(t.currentA) : '',
+    );
+    _speedCtrl = TextEditingController(text: t != null ? _fmt(t.speedRpm) : '');
+    _freqCtrl = TextEditingController(
+      text: t != null ? _fmt(t.frequencyHz) : '',
+    );
+    _productivityCtrl = TextEditingController(
+      text: t != null ? _fmt(t.productivityLMin) : '',
+    );
+    _pressureCtrl = TextEditingController(
+      text: t != null ? _fmt(t.pressureBar) : '',
+    );
+    _holdTimeCtrl = TextEditingController(
+      text: t != null && t.holdTimeMin > 0 ? _fmt(t.holdTimeMin) : '',
+    );
+    _receiverCtrl = TextEditingController(
+      text: t != null ? _fmt(t.receiverVolumeL) : '',
+    );
   }
 
   @override
@@ -375,8 +393,10 @@ class _TemplateDialogState extends State<_TemplateDialog> {
   }
 
   String? _reqPositive(String? v, AppLocalizations loc) {
-    if (v == null || v.trim().isEmpty) return loc.tr('compressor_params_required');
-    if (_parsePositive(v) == null) return loc.tr('compressor_params_negative_error');
+    if (v == null || v.trim().isEmpty)
+      return loc.tr('compressor_params_required');
+    if (_parsePositive(v) == null)
+      return loc.tr('compressor_params_negative_error');
     return null;
   }
 
@@ -437,7 +457,7 @@ class _TemplateDialogState extends State<_TemplateDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final loc   = AppLocalizations.of(context);
+    final loc = AppLocalizations.of(context);
     final isNew = widget.template == null;
 
     return AlertDialog(
@@ -476,7 +496,8 @@ class _TemplateDialogState extends State<_TemplateDialog> {
                   children: [
                     Expanded(
                       child: _NumField(
-                        label: '${loc.tr('compressor_power')} (${loc.tr('unit_kwt')})',
+                        label:
+                            '${loc.tr('compressor_power')} (${loc.tr('unit_kwt')})',
                         controller: _powerCtrl,
                         validator: (v) => _reqPositive(v, loc),
                       ),
@@ -484,7 +505,8 @@ class _TemplateDialogState extends State<_TemplateDialog> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _NumField(
-                        label: '${loc.tr('compressor_voltage')} (${loc.tr('unit_v')})',
+                        label:
+                            '${loc.tr('compressor_voltage')} (${loc.tr('unit_v')})',
                         controller: _voltageCtrl,
                         validator: (v) => _reqPositive(v, loc),
                       ),
@@ -496,7 +518,8 @@ class _TemplateDialogState extends State<_TemplateDialog> {
                   children: [
                     Expanded(
                       child: _NumField(
-                        label: '${loc.tr('compressor_current')} (${loc.tr('unit_a')})',
+                        label:
+                            '${loc.tr('compressor_current')} (${loc.tr('unit_a')})',
                         controller: _currentCtrl,
                         validator: (v) => _reqPositive(v, loc),
                       ),
@@ -504,7 +527,8 @@ class _TemplateDialogState extends State<_TemplateDialog> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _NumField(
-                        label: '${loc.tr('compressor_speed')} (${loc.tr('unit_rpm')})',
+                        label:
+                            '${loc.tr('compressor_speed')} (${loc.tr('unit_rpm')})',
                         controller: _speedCtrl,
                         validator: (v) => _reqPositive(v, loc),
                       ),
@@ -513,7 +537,8 @@ class _TemplateDialogState extends State<_TemplateDialog> {
                 ),
                 _gap,
                 _NumField(
-                  label: '${loc.tr('compressor_frequency')} (${loc.tr('unit_hz')})',
+                  label:
+                      '${loc.tr('compressor_frequency')} (${loc.tr('unit_hz')})',
                   controller: _freqCtrl,
                   validator: (v) => _reqPositive(v, loc),
                 ),
@@ -617,10 +642,7 @@ class _DialogField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       maxLength: maxLength,
-      decoration: InputDecoration(
-        labelText: label,
-        counterText: '',
-      ),
+      decoration: InputDecoration(labelText: label, counterText: ''),
       validator: validator,
     );
   }
@@ -647,13 +669,8 @@ class _NumField extends StatelessWidget {
         decimal: true,
         signed: false,
       ),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-      ],
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hintText,
-      ),
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+      decoration: InputDecoration(labelText: label, hintText: hintText),
       validator: validator,
     );
   }

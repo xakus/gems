@@ -11,10 +11,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppHeader(),
-      body: const _HomeBody(),
-    );
+    return Scaffold(appBar: const AppHeader(), body: const _HomeBody());
   }
 }
 
@@ -72,18 +69,53 @@ class _HomeBody extends StatelessWidget {
             child: SizedBox(
               height: cardHeight,
               child: Row(
-            children: [
-              Expanded(child: _StandCard(config: stands[0], title: loc.tr(stands[0].titleKey), subtitle: loc.tr(stands[0].subtitleKey), delay: 0)),
-              const SizedBox(width: gap),
-              Expanded(child: _StandCard(config: stands[1], title: loc.tr(stands[1].titleKey), subtitle: loc.tr(stands[1].subtitleKey), delay: 80)),
-              const SizedBox(width: gap),
-              Expanded(child: _StandCard(config: stands[2], title: loc.tr(stands[2].titleKey), subtitle: loc.tr(stands[2].subtitleKey), delay: 160)),
-              const SizedBox(width: gap),
-              Expanded(child: _StandCard(config: stands[3], title: loc.tr(stands[3].titleKey), subtitle: loc.tr(stands[3].subtitleKey), delay: 240)),
-              const SizedBox(width: gap),
-              Expanded(child: _StandCard(config: stands[4], title: loc.tr(stands[4].titleKey), subtitle: loc.tr(stands[4].subtitleKey), delay: 320)),
-            ],
-          ),
+                children: [
+                  Expanded(
+                    child: _StandCard(
+                      config: stands[0],
+                      title: loc.tr(stands[0].titleKey),
+                      subtitle: loc.tr(stands[0].subtitleKey),
+                      delay: 0,
+                    ),
+                  ),
+                  const SizedBox(width: gap),
+                  Expanded(
+                    child: _StandCard(
+                      config: stands[1],
+                      title: loc.tr(stands[1].titleKey),
+                      subtitle: loc.tr(stands[1].subtitleKey),
+                      delay: 80,
+                    ),
+                  ),
+                  const SizedBox(width: gap),
+                  Expanded(
+                    child: _StandCard(
+                      config: stands[2],
+                      title: loc.tr(stands[2].titleKey),
+                      subtitle: loc.tr(stands[2].subtitleKey),
+                      delay: 160,
+                    ),
+                  ),
+                  const SizedBox(width: gap),
+                  Expanded(
+                    child: _StandCard(
+                      config: stands[3],
+                      title: loc.tr(stands[3].titleKey),
+                      subtitle: loc.tr(stands[3].subtitleKey),
+                      delay: 240,
+                    ),
+                  ),
+                  const SizedBox(width: gap),
+                  Expanded(
+                    child: _StandCard(
+                      config: stands[4],
+                      title: loc.tr(stands[4].titleKey),
+                      subtitle: loc.tr(stands[4].subtitleKey),
+                      delay: 320,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -139,110 +171,119 @@ class _StandCardState extends State<_StandCard> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, widget.config.route),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          transform: Matrix4.translationValues(0.0, _hovered ? -6.0 : 0.0, 0.0),
-          decoration: BoxDecoration(
-            color: cardColor,
-            borderRadius: BorderRadius.circular(kCardRadius),
-            border: Border.all(
-              color: _hovered
-                  ? primary.withValues(alpha: 0.5)
-                  : primary.withValues(alpha: 0.12),
-              width: _hovered ? 1.5 : 1.0,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: shadowColor,
-                blurRadius: _hovered ? 20 : 8,
-                offset: Offset(0, _hovered ? 8 : 3),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(kPaddingLarge),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Название стенда (вверху)
-                Text(
-                  widget.title,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 30,
-                        color: primary,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
-                ),
-
-                const SizedBox(height: kPadding),
-
-                // Разделитель
-                Container(
-                  height: 1,
+      child:
+          GestureDetector(
+                onTap: () => Navigator.pushNamed(context, widget.config.route),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                  transform: Matrix4.translationValues(
+                    0.0,
+                    _hovered ? -6.0 : 0.0,
+                    0.0,
+                  ),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        primary.withValues(alpha: 0.3),
-                        Colors.transparent,
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(kCardRadius),
+                    border: Border.all(
+                      color: _hovered
+                          ? primary.withValues(alpha: 0.5)
+                          : primary.withValues(alpha: 0.12),
+                      width: _hovered ? 1.5 : 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: shadowColor,
+                        blurRadius: _hovered ? 20 : 8,
+                        offset: Offset(0, _hovered ? 8 : 3),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(kPaddingLarge),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Название стенда (вверху)
+                        Text(
+                          widget.title,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontSize: 30,
+                                color: primary,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                        ),
+
+                        const SizedBox(height: kPadding),
+
+                        // Разделитель
+                        Container(
+                          height: 1,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                primary.withValues(alpha: 0.3),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: kPadding),
+
+                        // Изображение двигателя
+                        Expanded(
+                          flex: 3,
+                          child: AnimatedScale(
+                            scale: _hovered ? 1.06 : 1.0,
+                            duration: const Duration(milliseconds: 200),
+                            child: Image.asset(
+                              widget.config.image,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                    Icons.electric_bolt_rounded,
+                                    size: 72,
+                                    color: primary,
+                                  ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: kPadding),
+
+                        // Описание
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            widget.subtitle,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontSize: 20,
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
+                                  height: 1.4,
+                                ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-
-                const SizedBox(height: kPadding),
-
-                // Изображение двигателя
-                Expanded(
-                  flex: 3,
-                  child: AnimatedScale(
-                    scale: _hovered ? 1.06 : 1.0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Image.asset(
-                      widget.config.image,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => Icon(
-                        Icons.electric_bolt_rounded,
-                        size: 72,
-                        color: primary,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: kPadding),
-
-                // Описание
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    widget.subtitle,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontSize: 20,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.6),
-                          height: 1.4,
-                        ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      )
-          .animate()
-          .fadeIn(delay: Duration(milliseconds: widget.delay), duration: 350.ms)
-          .slideY(begin: 0.08, end: 0),
+              )
+              .animate()
+              .fadeIn(
+                delay: Duration(milliseconds: widget.delay),
+                duration: 350.ms,
+              )
+              .slideY(begin: 0.08, end: 0),
     );
   }
 }

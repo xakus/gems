@@ -25,16 +25,16 @@ class _CompressorParamsScreenState extends State<CompressorParamsScreen> {
   /// ID выбранного шаблона; null = «Без шаблона»
   int? _selectedTemplateId;
 
-  final _nameCtrl         = TextEditingController();
-  final _powerCtrl        = TextEditingController();
-  final _voltageCtrl      = TextEditingController();
-  final _currentCtrl      = TextEditingController();
-  final _speedCtrl        = TextEditingController();
-  final _freqCtrl         = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _powerCtrl = TextEditingController();
+  final _voltageCtrl = TextEditingController();
+  final _currentCtrl = TextEditingController();
+  final _speedCtrl = TextEditingController();
+  final _freqCtrl = TextEditingController();
   final _productivityCtrl = TextEditingController();
-  final _pressureCtrl     = TextEditingController();
-  final _holdTimeCtrl     = TextEditingController();
-  final _receiverCtrl     = TextEditingController();
+  final _pressureCtrl = TextEditingController();
+  final _holdTimeCtrl = TextEditingController();
+  final _receiverCtrl = TextEditingController();
 
   String? _nameError;
   String? _powerError;
@@ -105,19 +105,29 @@ class _CompressorParamsScreenState extends State<CompressorParamsScreen> {
   bool _holdOk(String value) => _parseNonNegative(value) != null;
 
   bool get _isFormValid {
-    final nameOk = _nameCtrl.text.trim().isNotEmpty &&
+    final nameOk =
+        _nameCtrl.text.trim().isNotEmpty &&
         _nameCtrl.text.trim().length <= 200 &&
         _nameError == null;
     return nameOk &&
-        _powerError == null && _fieldOk(_powerCtrl.text) &&
-        _voltageError == null && _fieldOk(_voltageCtrl.text) &&
-        _currentError == null && _fieldOk(_currentCtrl.text) &&
-        _speedError == null && _fieldOk(_speedCtrl.text) &&
-        _freqError == null && _fieldOk(_freqCtrl.text) &&
-        _productivityError == null && _fieldOk(_productivityCtrl.text) &&
-        _pressureError == null && _fieldOk(_pressureCtrl.text) &&
-        _holdTimeError == null && _holdOk(_holdTimeCtrl.text) &&
-        _receiverError == null && _fieldOk(_receiverCtrl.text);
+        _powerError == null &&
+        _fieldOk(_powerCtrl.text) &&
+        _voltageError == null &&
+        _fieldOk(_voltageCtrl.text) &&
+        _currentError == null &&
+        _fieldOk(_currentCtrl.text) &&
+        _speedError == null &&
+        _fieldOk(_speedCtrl.text) &&
+        _freqError == null &&
+        _fieldOk(_freqCtrl.text) &&
+        _productivityError == null &&
+        _fieldOk(_productivityCtrl.text) &&
+        _pressureError == null &&
+        _fieldOk(_pressureCtrl.text) &&
+        _holdTimeError == null &&
+        _holdOk(_holdTimeCtrl.text) &&
+        _receiverError == null &&
+        _fieldOk(_receiverCtrl.text);
   }
 
   String _errorText(String? code, AppLocalizations loc) {
@@ -191,9 +201,9 @@ class _CompressorParamsScreenState extends State<CompressorParamsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final loc    = AppLocalizations.of(context);
+    final loc = AppLocalizations.of(context);
     final primary = AppColors.primary;
-    final isDark  = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: const AppHeader(showBackButton: true),
@@ -210,14 +220,11 @@ class _CompressorParamsScreenState extends State<CompressorParamsScreen> {
               loc.tr('compressor_test_title'),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 44,
-                  ),
-            )
-                .animate()
-                .fadeIn(duration: 300.ms)
-                .slideY(begin: -0.12, end: 0),
+                color: primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 44,
+              ),
+            ).animate().fadeIn(duration: 300.ms).slideY(begin: -0.12, end: 0),
 
             const SizedBox(height: kPaddingLarge * 2),
 
@@ -225,250 +232,300 @@ class _CompressorParamsScreenState extends State<CompressorParamsScreen> {
             Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
-                child: _FormCard(
-                  isDark: isDark,
-                  primary: primary,
-                  child: _loadingTemplates
-                      ? const Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 48),
-                            child: CircularProgressIndicator(),
-                          ),
+                child:
+                    _FormCard(
+                          isDark: isDark,
+                          primary: primary,
+                          child: _loadingTemplates
+                              ? const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 48),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    // Выбор шаблона
+                                    _TemplateDropdown(
+                                      templates: _templates,
+                                      selectedId: _selectedTemplateId,
+                                      onChanged: _onTemplateChanged,
+                                      label: loc.tr('compressor_template'),
+                                      noTemplateName: loc.tr(
+                                        'compressor_no_template',
+                                      ),
+                                      animDelay: 80,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    // Название компрессора
+                                    _NameField(
+                                      label: loc.tr('compressor_name'),
+                                      controller: _nameCtrl,
+                                      errorText: _nameError != null
+                                          ? _errorText(_nameError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(() {
+                                          if (v.trim().isEmpty) {
+                                            _nameError = 'required';
+                                          } else if (v.trim().length > 200) {
+                                            _nameError = 'too_long';
+                                          } else {
+                                            _nameError = null;
+                                          }
+                                        });
+                                      },
+                                      animDelay: 150,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    _ParamField(
+                                      label: loc.tr('compressor_power'),
+                                      unit: loc.tr('unit_kwt'),
+                                      controller: _powerCtrl,
+                                      errorText: _powerError != null
+                                          ? _errorText(_powerError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () => _powerError = _validatePositive(
+                                            v,
+                                          ),
+                                        );
+                                      },
+                                      animDelay: 220,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    _ParamField(
+                                      label: loc.tr('compressor_voltage'),
+                                      unit: loc.tr('unit_v'),
+                                      controller: _voltageCtrl,
+                                      errorText: _voltageError != null
+                                          ? _errorText(_voltageError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () => _voltageError =
+                                              _validatePositive(v),
+                                        );
+                                      },
+                                      animDelay: 290,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    _ParamField(
+                                      label: loc.tr('compressor_current'),
+                                      unit: loc.tr('unit_a'),
+                                      controller: _currentCtrl,
+                                      errorText: _currentError != null
+                                          ? _errorText(_currentError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () => _currentError =
+                                              _validatePositive(v),
+                                        );
+                                      },
+                                      animDelay: 360,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    _ParamField(
+                                      label: loc.tr('compressor_speed'),
+                                      unit: loc.tr('unit_rpm'),
+                                      controller: _speedCtrl,
+                                      errorText: _speedError != null
+                                          ? _errorText(_speedError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () => _speedError = _validatePositive(
+                                            v,
+                                          ),
+                                        );
+                                      },
+                                      animDelay: 430,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    _ParamField(
+                                      label: loc.tr('compressor_frequency'),
+                                      unit: loc.tr('unit_hz'),
+                                      controller: _freqCtrl,
+                                      errorText: _freqError != null
+                                          ? _errorText(_freqError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () =>
+                                              _freqError = _validatePositive(v),
+                                        );
+                                      },
+                                      animDelay: 500,
+                                    ),
+
+                                    const SizedBox(height: kPaddingLarge),
+
+                                    // Разделитель между блоками
+                                    _FieldDivider(
+                                      primary: primary,
+                                      animDelay: 560,
+                                    ),
+
+                                    const SizedBox(height: kPaddingLarge),
+
+                                    _ParamField(
+                                      label: loc.tr('compressor_productivity'),
+                                      unit: loc.tr('unit_l_min'),
+                                      controller: _productivityCtrl,
+                                      errorText: _productivityError != null
+                                          ? _errorText(_productivityError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () => _productivityError =
+                                              _validatePositive(v),
+                                        );
+                                      },
+                                      animDelay: 580,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    _ParamField(
+                                      label: loc.tr('compressor_pressure'),
+                                      unit: loc.tr('unit_bar'),
+                                      controller: _pressureCtrl,
+                                      errorText: _pressureError != null
+                                          ? _errorText(_pressureError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () => _pressureError =
+                                              _validatePositive(v),
+                                        );
+                                      },
+                                      animDelay: 640,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    _ParamField(
+                                      label: loc.tr('compressor_hold_time'),
+                                      unit: loc.tr('unit_min'),
+                                      controller: _holdTimeCtrl,
+                                      errorText: _holdTimeError != null
+                                          ? _errorText(_holdTimeError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () => _holdTimeError =
+                                              _validateNonNegative(v),
+                                        );
+                                      },
+                                      animDelay: 700,
+                                      isOptional: true,
+                                    ),
+
+                                    const SizedBox(height: kPadding * 1.5),
+
+                                    _ParamField(
+                                      label: loc.tr(
+                                        'compressor_receiver_volume',
+                                      ),
+                                      unit: loc.tr('unit_l'),
+                                      controller: _receiverCtrl,
+                                      errorText: _receiverError != null
+                                          ? _errorText(_receiverError, loc)
+                                          : null,
+                                      onChanged: (v) {
+                                        _deselectTemplate();
+                                        setState(
+                                          () => _receiverError =
+                                              _validatePositive(v),
+                                        );
+                                      },
+                                      animDelay: 760,
+                                    ),
+
+                                    const SizedBox(height: kPaddingLarge * 1.5),
+
+                                    // ── Кнопка «Пуск» ──────────────────────────
+                                    AnimatedContainer(
+                                          duration: const Duration(
+                                            milliseconds: 250,
+                                          ),
+                                          child: ElevatedButton(
+                                            onPressed: _isFormValid
+                                                ? _onStart
+                                                : null,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: primary,
+                                              foregroundColor: Colors.white,
+                                              disabledBackgroundColor: primary
+                                                  .withValues(alpha: 0.25),
+                                              disabledForegroundColor: Colors
+                                                  .white
+                                                  .withValues(alpha: 0.45),
+                                              elevation: _isFormValid ? 6 : 0,
+                                              shadowColor: primary.withValues(
+                                                alpha: 0.45,
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 18,
+                                                  ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      kButtonRadius,
+                                                    ),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              loc.tr('compressor_start'),
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 1.2,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                        .animate()
+                                        .fadeIn(delay: 820.ms, duration: 350.ms)
+                                        .slideY(begin: 0.12, end: 0),
+                                  ],
+                                ),
                         )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // Выбор шаблона
-                            _TemplateDropdown(
-                              templates: _templates,
-                              selectedId: _selectedTemplateId,
-                              onChanged: _onTemplateChanged,
-                              label: loc.tr('compressor_template'),
-                              noTemplateName: loc.tr('compressor_no_template'),
-                              animDelay: 80,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            // Название компрессора
-                            _NameField(
-                              label: loc.tr('compressor_name'),
-                              controller: _nameCtrl,
-                              errorText: _nameError != null
-                                  ? _errorText(_nameError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() {
-                                  if (v.trim().isEmpty) {
-                                    _nameError = 'required';
-                                  } else if (v.trim().length > 200) {
-                                    _nameError = 'too_long';
-                                  } else {
-                                    _nameError = null;
-                                  }
-                                });
-                              },
-                              animDelay: 150,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            _ParamField(
-                              label: loc.tr('compressor_power'),
-                              unit: loc.tr('unit_kwt'),
-                              controller: _powerCtrl,
-                              errorText: _powerError != null
-                                  ? _errorText(_powerError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _powerError = _validatePositive(v));
-                              },
-                              animDelay: 220,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            _ParamField(
-                              label: loc.tr('compressor_voltage'),
-                              unit: loc.tr('unit_v'),
-                              controller: _voltageCtrl,
-                              errorText: _voltageError != null
-                                  ? _errorText(_voltageError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _voltageError = _validatePositive(v));
-                              },
-                              animDelay: 290,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            _ParamField(
-                              label: loc.tr('compressor_current'),
-                              unit: loc.tr('unit_a'),
-                              controller: _currentCtrl,
-                              errorText: _currentError != null
-                                  ? _errorText(_currentError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _currentError = _validatePositive(v));
-                              },
-                              animDelay: 360,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            _ParamField(
-                              label: loc.tr('compressor_speed'),
-                              unit: loc.tr('unit_rpm'),
-                              controller: _speedCtrl,
-                              errorText: _speedError != null
-                                  ? _errorText(_speedError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _speedError = _validatePositive(v));
-                              },
-                              animDelay: 430,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            _ParamField(
-                              label: loc.tr('compressor_frequency'),
-                              unit: loc.tr('unit_hz'),
-                              controller: _freqCtrl,
-                              errorText: _freqError != null
-                                  ? _errorText(_freqError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _freqError = _validatePositive(v));
-                              },
-                              animDelay: 500,
-                            ),
-
-                            const SizedBox(height: kPaddingLarge),
-
-                            // Разделитель между блоками
-                            _FieldDivider(primary: primary, animDelay: 560),
-
-                            const SizedBox(height: kPaddingLarge),
-
-                            _ParamField(
-                              label: loc.tr('compressor_productivity'),
-                              unit: loc.tr('unit_l_min'),
-                              controller: _productivityCtrl,
-                              errorText: _productivityError != null
-                                  ? _errorText(_productivityError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _productivityError = _validatePositive(v));
-                              },
-                              animDelay: 580,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            _ParamField(
-                              label: loc.tr('compressor_pressure'),
-                              unit: loc.tr('unit_bar'),
-                              controller: _pressureCtrl,
-                              errorText: _pressureError != null
-                                  ? _errorText(_pressureError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _pressureError = _validatePositive(v));
-                              },
-                              animDelay: 640,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            _ParamField(
-                              label: loc.tr('compressor_hold_time'),
-                              unit: loc.tr('unit_min'),
-                              controller: _holdTimeCtrl,
-                              errorText: _holdTimeError != null
-                                  ? _errorText(_holdTimeError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _holdTimeError = _validateNonNegative(v));
-                              },
-                              animDelay: 700,
-                              isOptional: true,
-                            ),
-
-                            const SizedBox(height: kPadding * 1.5),
-
-                            _ParamField(
-                              label: loc.tr('compressor_receiver_volume'),
-                              unit: loc.tr('unit_l'),
-                              controller: _receiverCtrl,
-                              errorText: _receiverError != null
-                                  ? _errorText(_receiverError, loc)
-                                  : null,
-                              onChanged: (v) {
-                                _deselectTemplate();
-                                setState(() => _receiverError = _validatePositive(v));
-                              },
-                              animDelay: 760,
-                            ),
-
-                            const SizedBox(height: kPaddingLarge * 1.5),
-
-                            // ── Кнопка «Пуск» ──────────────────────────
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              child: ElevatedButton(
-                                onPressed: _isFormValid ? _onStart : null,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: primary,
-                                  foregroundColor: Colors.white,
-                                  disabledBackgroundColor:
-                                      primary.withValues(alpha: 0.25),
-                                  disabledForegroundColor:
-                                      Colors.white.withValues(alpha: 0.45),
-                                  elevation: _isFormValid ? 6 : 0,
-                                  shadowColor: primary.withValues(alpha: 0.45),
-                                  padding: const EdgeInsets.symmetric(vertical: 18),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(kButtonRadius),
-                                  ),
-                                ),
-                                child: Text(
-                                  loc.tr('compressor_start'),
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 1.2,
-                                  ),
-                                ),
-                              ),
-                            )
-                                .animate()
-                                .fadeIn(delay: 820.ms, duration: 350.ms)
-                                .slideY(begin: 0.12, end: 0),
-                          ],
+                        .animate()
+                        .fadeIn(delay: 80.ms, duration: 400.ms)
+                        .scale(
+                          begin: const Offset(0.97, 0.97),
+                          end: const Offset(1.0, 1.0),
+                          delay: 80.ms,
+                          duration: 400.ms,
+                          curve: Curves.easeOut,
                         ),
-                )
-                    .animate()
-                    .fadeIn(delay: 80.ms, duration: 400.ms)
-                    .scale(
-                      begin: const Offset(0.97, 0.97),
-                      end: const Offset(1.0, 1.0),
-                      delay: 80.ms,
-                      duration: 400.ms,
-                      curve: Curves.easeOut,
-                    ),
               ),
             ),
 
@@ -504,64 +561,65 @@ class _TemplateDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primary = AppColors.primary;
-    final isDark  = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final labelColor = isDark ? Colors.white70 : AppColors.lightOnBackground;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 13,
                 color: labelColor,
               ),
-        ),
-        const SizedBox(height: 6),
-        DropdownButtonFormField<int?>(
-          // ignore: deprecated_member_use
-          value: selectedId,
-          isExpanded: true,
-          dropdownColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.black.withValues(alpha: 0.02),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            border: _border(primary, 0.2),
-            enabledBorder: _border(primary, 0.22),
-            focusedBorder: _border(primary, 1.0, width: 1.5),
-          ),
-          items: [
-            DropdownMenuItem<int?>(
-              value: null,
-              child: Text(
-                noTemplateName,
-                style: TextStyle(
-                  color: isDark
-                      ? Colors.white54
-                      : AppColors.lightOnBackground.withValues(alpha: 0.5),
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
             ),
-            ...templates.map(
-              (t) => DropdownMenuItem<int?>(
-                value: t.id,
-                child: Text(
-                  t.name,
-                  overflow: TextOverflow.ellipsis,
+            const SizedBox(height: 6),
+            DropdownButtonFormField<int?>(
+              // ignore: deprecated_member_use
+              value: selectedId,
+              isExpanded: true,
+              dropdownColor: isDark
+                  ? AppColors.darkSurface
+                  : AppColors.lightSurface,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: isDark
+                    ? Colors.white.withValues(alpha: 0.04)
+                    : Colors.black.withValues(alpha: 0.02),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
                 ),
+                border: _border(primary, 0.2),
+                enabledBorder: _border(primary, 0.22),
+                focusedBorder: _border(primary, 1.0, width: 1.5),
               ),
+              items: [
+                DropdownMenuItem<int?>(
+                  value: null,
+                  child: Text(
+                    noTemplateName,
+                    style: TextStyle(
+                      color: isDark
+                          ? Colors.white54
+                          : AppColors.lightOnBackground.withValues(alpha: 0.5),
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+                ...templates.map(
+                  (t) => DropdownMenuItem<int?>(
+                    value: t.id,
+                    child: Text(t.name, overflow: TextOverflow.ellipsis),
+                  ),
+                ),
+              ],
+              onChanged: onChanged,
             ),
           ],
-          onChanged: onChanged,
-        ),
-      ],
-    )
+        )
         .animate()
         .fadeIn(
           delay: Duration(milliseconds: animDelay),
@@ -602,8 +660,8 @@ class _NameField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary  = AppColors.primary;
-    final isDark   = Theme.of(context).brightness == Brightness.dark;
+    final primary = AppColors.primary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasError = errorText != null && errorText!.isNotEmpty;
 
     final labelColor = isDark
@@ -611,68 +669,78 @@ class _NameField extends StatelessWidget {
         : (hasError ? AppColors.error : AppColors.lightOnBackground);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 13,
                 color: labelColor,
               ),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          onChanged: onChanged,
-          maxLength: 200,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            ),
+            const SizedBox(height: 6),
+            TextField(
+              controller: controller,
+              onChanged: onChanged,
+              maxLength: 200,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontSize: 16,
                 color: isDark
                     ? AppColors.darkOnBackground
                     : AppColors.lightOnBackground,
               ),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.black.withValues(alpha: 0.02),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            counterText: '',
-            border: _border(hasError ? AppColors.error : primary, 0.2),
-            enabledBorder:
-                _border(hasError ? AppColors.error : primary, 0.22),
-            focusedBorder: _border(
-              hasError ? AppColors.error : primary,
-              hasError ? 0.8 : 1.0,
-              width: 1.5,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: isDark
+                    ? Colors.white.withValues(alpha: 0.04)
+                    : Colors.black.withValues(alpha: 0.02),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
+                counterText: '',
+                border: _border(hasError ? AppColors.error : primary, 0.2),
+                enabledBorder: _border(
+                  hasError ? AppColors.error : primary,
+                  0.22,
+                ),
+                focusedBorder: _border(
+                  hasError ? AppColors.error : primary,
+                  hasError ? 0.8 : 1.0,
+                  width: 1.5,
+                ),
+              ),
             ),
-          ),
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          child: hasError
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 5, left: 2),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.error_outline_rounded,
-                          size: 14, color: AppColors.error),
-                      const SizedBox(width: 4),
-                      Text(errorText!,
-                          style: const TextStyle(
+            AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              child: hasError
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 5, left: 2),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.error_outline_rounded,
+                            size: 14,
+                            color: AppColors.error,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            errorText!,
+                            style: const TextStyle(
                               color: AppColors.error,
                               fontSize: 12,
-                              fontWeight: FontWeight.w500)),
-                    ],
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-      ],
-    )
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        )
         .animate()
         .fadeIn(
           delay: Duration(milliseconds: animDelay),
@@ -719,8 +787,8 @@ class _ParamField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary  = AppColors.primary;
-    final isDark   = Theme.of(context).brightness == Brightness.dark;
+    final primary = AppColors.primary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasError = errorText != null && errorText!.isNotEmpty;
 
     final labelColor = isDark
@@ -728,88 +796,100 @@ class _ParamField extends StatelessWidget {
         : (hasError ? AppColors.error : AppColors.lightOnBackground);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RichText(
-          text: TextSpan(
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RichText(
+              text: TextSpan(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                   color: labelColor,
                 ),
-            children: [
-              TextSpan(text: label),
-              TextSpan(
-                text: '  $unit',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: labelColor.withValues(alpha: hasError ? 1.0 : 0.65),
-                ),
+                children: [
+                  TextSpan(text: label),
+                  TextSpan(
+                    text: '  $unit',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: labelColor.withValues(
+                        alpha: hasError ? 1.0 : 0.65,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          onChanged: onChanged,
-          keyboardType: const TextInputType.numberWithOptions(
-            decimal: true,
-            signed: false,
-          ),
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-          ],
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            ),
+            const SizedBox(height: 6),
+            TextField(
+              controller: controller,
+              onChanged: onChanged,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: false,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
+              ],
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontSize: 16,
                 color: isDark
                     ? AppColors.darkOnBackground
                     : AppColors.lightOnBackground,
               ),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.black.withValues(alpha: 0.02),
-            hintText: isOptional ? '0' : null,
-            hintStyle: TextStyle(
-              color: isDark ? Colors.white24 : Colors.black26,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: isDark
+                    ? Colors.white.withValues(alpha: 0.04)
+                    : Colors.black.withValues(alpha: 0.02),
+                hintText: isOptional ? '0' : null,
+                hintStyle: TextStyle(
+                  color: isDark ? Colors.white24 : Colors.black26,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
+                border: _border(hasError ? AppColors.error : primary, 0.2),
+                enabledBorder: _border(
+                  hasError ? AppColors.error : primary,
+                  0.22,
+                ),
+                focusedBorder: _border(
+                  hasError ? AppColors.error : primary,
+                  hasError ? 0.8 : 1.0,
+                  width: 1.5,
+                ),
+              ),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            border: _border(hasError ? AppColors.error : primary, 0.2),
-            enabledBorder:
-                _border(hasError ? AppColors.error : primary, 0.22),
-            focusedBorder: _border(
-              hasError ? AppColors.error : primary,
-              hasError ? 0.8 : 1.0,
-              width: 1.5,
-            ),
-          ),
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          child: hasError
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 5, left: 2),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.error_outline_rounded,
-                          size: 14, color: AppColors.error),
-                      const SizedBox(width: 4),
-                      Text(errorText!,
-                          style: const TextStyle(
+            AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              child: hasError
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 5, left: 2),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.error_outline_rounded,
+                            size: 14,
+                            color: AppColors.error,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            errorText!,
+                            style: const TextStyle(
                               color: AppColors.error,
                               fontSize: 12,
-                              fontWeight: FontWeight.w500)),
-                    ],
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-      ],
-    )
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        )
         .animate()
         .fadeIn(
           delay: Duration(milliseconds: animDelay),
@@ -852,9 +932,10 @@ class _FieldDivider extends StatelessWidget {
           ],
         ),
       ),
-    )
-        .animate()
-        .fadeIn(delay: Duration(milliseconds: animDelay), duration: 400.ms);
+    ).animate().fadeIn(
+      delay: Duration(milliseconds: animDelay),
+      duration: 400.ms,
+    );
   }
 }
 

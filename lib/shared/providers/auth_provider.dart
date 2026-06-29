@@ -14,8 +14,8 @@ class AuthProvider extends ChangeNotifier {
   String? _error;
 
   AuthProvider({AuthService? authService, UserRepository? userRepo})
-      : _authService = authService ?? AuthService(),
-        _userRepo = userRepo ?? UserRepository();
+    : _authService = authService ?? AuthService(),
+      _userRepo = userRepo ?? UserRepository();
 
   Session? get session => _session;
   bool get isAuthenticated => _session != null;

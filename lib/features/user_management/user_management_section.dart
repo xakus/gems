@@ -44,49 +44,66 @@ class _UserManagementSectionState extends State<UserManagementSection> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final hPad = ((constraints.maxWidth - kUsersMaxWidth) / 2)
-            .clamp(kPaddingLarge, double.infinity);
+        final hPad = ((constraints.maxWidth - kUsersMaxWidth) / 2).clamp(
+          kPaddingLarge,
+          double.infinity,
+        );
         return Padding(
-          padding: EdgeInsets.fromLTRB(hPad, kPaddingLarge, hPad, kPaddingLarge),
+          padding: EdgeInsets.fromLTRB(
+            hPad,
+            kPaddingLarge,
+            hPad,
+            kPaddingLarge,
+          ),
           child: Expanded(
-                    child:Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      AppLocalizations.of(context).tr('users_title'),
-                      style: Theme.of(context).textTheme.headlineSmall,
-                      overflow: TextOverflow.ellipsis,
-                    ).animate().fadeIn(),
-                  ),
-                  const SizedBox(width: 16),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.person_add_rounded, size: 18),
-                    label: Text(AppLocalizations.of(context).tr('users_create')),
-                    onPressed: () => _showCreateDialog(),
-                  ).animate(delay: 100.ms).fadeIn(),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context).tr('users_title'),
+                        style: Theme.of(context).textTheme.headlineSmall,
+                        overflow: TextOverflow.ellipsis,
+                      ).animate().fadeIn(),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.person_add_rounded, size: 18),
+                      label: Text(
+                        AppLocalizations.of(context).tr('users_create'),
+                      ),
+                      onPressed: () => _showCreateDialog(),
+                    ).animate(delay: 100.ms).fadeIn(),
+                  ],
+                ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              if (_loading)
-                const Center(child: CircularProgressIndicator())
-              else
-                Row(children: [Expanded(
-                  child: _UserTable(
-                    users: _users,
-                    currentUserId: context.read<AuthProvider>().currentUser!.id!,
-                    onToggleActive: _toggleActive,
-                    onResetPassword: _resetPassword,
-                    onEdit: _showEditDialog,
-                    onDelete: _confirmDelete,
+                if (_loading)
+                  const Center(child: CircularProgressIndicator())
+                else
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _UserTable(
+                          users: _users,
+                          currentUserId: context
+                              .read<AuthProvider>()
+                              .currentUser!
+                              .id!,
+                          onToggleActive: _toggleActive,
+                          onResetPassword: _resetPassword,
+                          onEdit: _showEditDialog,
+                          onDelete: _confirmDelete,
+                        ),
+                      ),
+                    ],
                   ),
-                )]),
-            ],
-          ),),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -106,7 +123,10 @@ class _UserManagementSectionState extends State<UserManagementSection> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }
@@ -115,10 +135,7 @@ class _UserManagementSectionState extends State<UserManagementSection> {
   void _showEditDialog(User user) {
     showDialog(
       context: context,
-      builder: (ctx) => _EditUserDialog(
-        user: user,
-        onUpdated: _loadUsers,
-      ),
+      builder: (ctx) => _EditUserDialog(user: user, onUpdated: _loadUsers),
     );
   }
 
@@ -179,7 +196,10 @@ class _UserManagementSectionState extends State<UserManagementSection> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }
@@ -200,7 +220,10 @@ class _UserManagementSectionState extends State<UserManagementSection> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }
@@ -283,16 +306,28 @@ class _UserTable extends StatelessWidget {
             ),
             columnSpacing: 24,
             columns: [
-              DataColumn(label: Text(AppLocalizations.of(context).tr('users_name'))),
-              DataColumn(label: Text(AppLocalizations.of(context).tr('users_username'))),
-              DataColumn(label: Text(AppLocalizations.of(context).tr('users_role'))),
-              DataColumn(label: Text(AppLocalizations.of(context).tr('users_status'))),
-              DataColumn(label: Text(AppLocalizations.of(context).tr('users_created_at'))),
-              DataColumn(label: Text(AppLocalizations.of(context).tr('users_actions'))),
+              DataColumn(
+                label: Text(AppLocalizations.of(context).tr('users_name')),
+              ),
+              DataColumn(
+                label: Text(AppLocalizations.of(context).tr('users_username')),
+              ),
+              DataColumn(
+                label: Text(AppLocalizations.of(context).tr('users_role')),
+              ),
+              DataColumn(
+                label: Text(AppLocalizations.of(context).tr('users_status')),
+              ),
+              DataColumn(
+                label: Text(
+                  AppLocalizations.of(context).tr('users_created_at'),
+                ),
+              ),
+              DataColumn(
+                label: Text(AppLocalizations.of(context).tr('users_actions')),
+              ),
             ],
-            rows: users
-                .map((u) => _buildRow(context, u))
-                .toList(),
+            rows: users.map((u) => _buildRow(context, u)).toList(),
           ),
         ),
       ),
@@ -301,7 +336,8 @@ class _UserTable extends StatelessWidget {
 
   DataRow _buildRow(BuildContext context, User user) {
     final isCurrent = user.id == currentUserId;
-    final dateStr = '${user.createdAt.day.toString().padLeft(2, '0')}'
+    final dateStr =
+        '${user.createdAt.day.toString().padLeft(2, '0')}'
         '.${user.createdAt.month.toString().padLeft(2, '0')}'
         '.${user.createdAt.year}';
 
@@ -324,15 +360,22 @@ class _UserTable extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     if (isCurrent)
-                      Text(AppLocalizations.of(context).tr('users_you'),
-                          style: const TextStyle(fontSize: 11, color: AppColors.info)),
+                      Text(
+                        AppLocalizations.of(context).tr('users_you'),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.info,
+                        ),
+                      ),
                   ],
                 ),
               ),
             ],
           ),
         ),
-        DataCell(Text(user.username, style: const TextStyle(fontFamily: 'monospace'))),
+        DataCell(
+          Text(user.username, style: const TextStyle(fontFamily: 'monospace')),
+        ),
         DataCell(_RoleBadge(role: user.role)),
         DataCell(_StatusBadge(active: user.isActive)),
         DataCell(Text(dateStr, style: const TextStyle(fontSize: 13))),
@@ -343,8 +386,11 @@ class _UserTable extends StatelessWidget {
               // Редактировать
               IconButton(
                 tooltip: AppLocalizations.of(context).tr('users_edit'),
-                icon: const Icon(Icons.edit_rounded,
-                    size: 18, color: AppColors.info),
+                icon: const Icon(
+                  Icons.edit_rounded,
+                  size: 18,
+                  color: AppColors.info,
+                ),
                 onPressed: () => onEdit(user),
               ),
               // Активировать/деактивировать
@@ -365,16 +411,24 @@ class _UserTable extends StatelessWidget {
               ),
               // Сброс пароля
               IconButton(
-                tooltip: AppLocalizations.of(context).tr('users_reset_password'),
-                icon: const Icon(Icons.lock_reset_rounded,
-                    size: 18, color: AppColors.warning),
+                tooltip: AppLocalizations.of(
+                  context,
+                ).tr('users_reset_password'),
+                icon: const Icon(
+                  Icons.lock_reset_rounded,
+                  size: 18,
+                  color: AppColors.warning,
+                ),
                 onPressed: () => onResetPassword(user),
               ),
               // Удалить
               IconButton(
                 tooltip: AppLocalizations.of(context).tr('users_delete'),
-                icon: const Icon(Icons.delete_rounded,
-                    size: 18, color: AppColors.error),
+                icon: const Icon(
+                  Icons.delete_rounded,
+                  size: 18,
+                  color: AppColors.error,
+                ),
                 onPressed: isCurrent ? null : () => onDelete(user),
               ),
             ],
@@ -567,8 +621,11 @@ class _CreateUserDialogState extends State<_CreateUserDialog> {
                   Expanded(
                     child: TextFormField(
                       controller: _firstNameCtrl,
-                      decoration: InputDecoration(labelText: l10n.tr('users_name')),
-                      validator: (v) => Validators.name(v, l10n.tr('users_name')),
+                      decoration: InputDecoration(
+                        labelText: l10n.tr('users_name'),
+                      ),
+                      validator: (v) =>
+                          Validators.name(v, l10n.tr('users_name')),
                       textInputAction: TextInputAction.next,
                     ),
                   ),
@@ -576,8 +633,11 @@ class _CreateUserDialogState extends State<_CreateUserDialog> {
                   Expanded(
                     child: TextFormField(
                       controller: _lastNameCtrl,
-                      decoration: InputDecoration(labelText: l10n.tr('users_lastname')),
-                      validator: (v) => Validators.name(v, l10n.tr('users_lastname')),
+                      decoration: InputDecoration(
+                        labelText: l10n.tr('users_lastname'),
+                      ),
+                      validator: (v) =>
+                          Validators.name(v, l10n.tr('users_lastname')),
                       textInputAction: TextInputAction.next,
                     ),
                   ),
@@ -726,7 +786,10 @@ class _EditUserDialogState extends State<_EditUserDialog> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     } finally {
@@ -757,9 +820,11 @@ class _EditUserDialogState extends State<_EditUserDialog> {
                   Expanded(
                     child: TextFormField(
                       controller: _firstNameCtrl,
-                      decoration:
-                          InputDecoration(labelText: l10n.tr('users_name')),
-                      validator: (v) => Validators.name(v, l10n.tr('users_name')),
+                      decoration: InputDecoration(
+                        labelText: l10n.tr('users_name'),
+                      ),
+                      validator: (v) =>
+                          Validators.name(v, l10n.tr('users_name')),
                       textInputAction: TextInputAction.next,
                     ),
                   ),
@@ -768,7 +833,8 @@ class _EditUserDialogState extends State<_EditUserDialog> {
                     child: TextFormField(
                       controller: _lastNameCtrl,
                       decoration: InputDecoration(
-                          labelText: l10n.tr('users_lastname')),
+                        labelText: l10n.tr('users_lastname'),
+                      ),
                       validator: (v) =>
                           Validators.name(v, l10n.tr('users_lastname')),
                       textInputAction: TextInputAction.next,

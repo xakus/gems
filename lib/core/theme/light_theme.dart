@@ -51,7 +51,11 @@ ThemeData buildLightTheme() {
         minimumSize: const Size(88, 52),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.3),
+        textStyle: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.3,
+        ),
       ),
     ),
 
@@ -96,7 +100,9 @@ ThemeData buildLightTheme() {
         borderSide: const BorderSide(color: AppColors.error, width: 2),
       ),
       labelStyle: const TextStyle(color: AppColors.lightSecondaryText),
-      hintStyle: TextStyle(color: AppColors.lightSecondaryText.withValues(alpha: 0.7)),
+      hintStyle: TextStyle(
+        color: AppColors.lightSecondaryText.withValues(alpha: 0.7),
+      ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),
 
@@ -109,11 +115,31 @@ ThemeData buildLightTheme() {
     iconTheme: const IconThemeData(color: AppColors.lightOnBackground),
 
     textTheme: const TextTheme(
-      headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.w700, color: AppColors.lightOnBackground),
-      headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.lightOnBackground),
-      headlineSmall: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.lightOnBackground),
-      titleLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.lightOnBackground),
-      titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.lightOnBackground),
+      headlineLarge: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.w700,
+        color: AppColors.lightOnBackground,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        color: AppColors.lightOnBackground,
+      ),
+      headlineSmall: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: AppColors.lightOnBackground,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: AppColors.lightOnBackground,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: AppColors.lightOnBackground,
+      ),
       bodyLarge: TextStyle(fontSize: 15, color: AppColors.lightOnBackground),
       bodyMedium: TextStyle(fontSize: 14, color: AppColors.lightOnBackground),
       bodySmall: TextStyle(fontSize: 12, color: AppColors.lightSecondaryText),

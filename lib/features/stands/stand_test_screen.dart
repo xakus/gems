@@ -32,10 +32,10 @@ class StandTestScreen extends StatelessWidget {
             Text(
               '${loc.tr(standTitleKey)} — ${loc.tr(testTypeKey)}',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 48,
-                  ),
+                color: primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 48,
+              ),
             ),
 
             const Expanded(child: SizedBox()),

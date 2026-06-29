@@ -50,8 +50,8 @@ class _LangChip extends StatelessWidget {
         color: selected
             ? AppColors.primary
             : (isDark
-                ? AppColors.darkSurfaceRaised
-                : AppColors.lightBackground),
+                  ? AppColors.darkSurfaceRaised
+                  : AppColors.lightBackground),
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
@@ -66,8 +66,8 @@ class _LangChip extends StatelessWidget {
                 color: selected
                     ? Colors.white
                     : (isDark
-                        ? AppColors.darkSecondaryText
-                        : AppColors.lightSecondaryText),
+                          ? AppColors.darkSecondaryText
+                          : AppColors.lightSecondaryText),
                 letterSpacing: 0.5,
               ),
             ),

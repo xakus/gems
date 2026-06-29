@@ -11,7 +11,7 @@ class ThemeProvider extends ChangeNotifier {
   int? _currentUserId;
 
   ThemeProvider({SettingsRepository? settingsRepo})
-      : _settingsRepo = settingsRepo ?? SettingsRepository();
+    : _settingsRepo = settingsRepo ?? SettingsRepository();
 
   ThemeMode get themeMode => _themeMode;
   bool get isDark => _themeMode == ThemeMode.dark;

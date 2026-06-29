@@ -36,6 +36,9 @@ dependencies:
   # Анимации
   flutter_animate: ^4.5.2
 
+  # Графики измерений (live-графики в окне теста)
+  fl_chart: ^0.69.2
+
   # Локализация Flutter (Material, Cupertino, Widgets делегаты)
   flutter_localizations:
     sdk: flutter

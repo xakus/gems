@@ -50,7 +50,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: switch (_selectedIndex) {
                 0 => const _GeneralSection(key: ValueKey('general')),
                 1 => const UserManagementSection(key: ValueKey('users')),
-                2 => const CompressorTemplatesSection(key: ValueKey('templates')),
+                2 => const CompressorTemplatesSection(
+                  key: ValueKey('templates'),
+                ),
                 _ => const AuditLogSection(key: ValueKey('audit')),
               },
             ),
@@ -94,14 +96,18 @@ class _SettingsSidebar extends StatelessWidget {
                   Icon(
                     Icons.arrow_back_ios_new_rounded,
                     size: 16,
-                    color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                    color: isDark
+                        ? AppColors.darkSecondaryText
+                        : AppColors.lightSecondaryText,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     AppLocalizations.of(context).tr('nav_back'),
                     style: TextStyle(
                       fontSize: 13,
-                      color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                      color: isDark
+                          ? AppColors.darkSecondaryText
+                          : AppColors.lightSecondaryText,
                     ),
                   ),
                 ],
@@ -186,7 +192,9 @@ class _SidebarItem extends StatelessWidget {
             icon,
             color: selected
                 ? AppColors.primary
-                : (isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText),
+                : (isDark
+                      ? AppColors.darkSecondaryText
+                      : AppColors.lightSecondaryText),
             size: 20,
           ),
           title: Text(
@@ -196,11 +204,15 @@ class _SidebarItem extends StatelessWidget {
               fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
               color: selected
                   ? AppColors.primary
-                  : (isDark ? AppColors.darkOnBackground : AppColors.lightOnBackground),
+                  : (isDark
+                        ? AppColors.darkOnBackground
+                        : AppColors.lightOnBackground),
             ),
           ),
           dense: true,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           onTap: onTap,
         ),
       ),
@@ -229,11 +241,20 @@ class _GeneralSection extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              const _ThemeCard().animate(delay: 50.ms).fadeIn().slideY(begin: 0.1, end: 0),
+              const _ThemeCard()
+                  .animate(delay: 50.ms)
+                  .fadeIn()
+                  .slideY(begin: 0.1, end: 0),
               const SizedBox(height: 16),
-              const _LanguageCard().animate(delay: 100.ms).fadeIn().slideY(begin: 0.1, end: 0),
+              const _LanguageCard()
+                  .animate(delay: 100.ms)
+                  .fadeIn()
+                  .slideY(begin: 0.1, end: 0),
               const SizedBox(height: 16),
-              const _ChangePasswordCard().animate(delay: 150.ms).fadeIn().slideY(begin: 0.1, end: 0),
+              const _ChangePasswordCard()
+                  .animate(delay: 150.ms)
+                  .fadeIn()
+                  .slideY(begin: 0.1, end: 0),
             ],
           ),
         ),
@@ -259,16 +280,25 @@ class _ThemeCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.palette_rounded, color: AppColors.primary, size: 20),
+                const Icon(
+                  Icons.palette_rounded,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
-                Text(AppLocalizations.of(context).tr('settings_theme'), style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  AppLocalizations.of(context).tr('settings_theme'),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ],
             ),
             const SizedBox(height: 16),
             Row(
               children: [
                 _ThemeOption(
-                  label: AppLocalizations.of(context).tr('settings_theme_light'),
+                  label: AppLocalizations.of(
+                    context,
+                  ).tr('settings_theme_light'),
                   icon: Icons.light_mode_rounded,
                   selected: !isDark,
                   onTap: () => themeProvider.setTheme('light'),
@@ -363,9 +393,16 @@ class _LanguageCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.language_rounded, color: AppColors.primary, size: 20),
+                const Icon(
+                  Icons.language_rounded,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
-                Text(AppLocalizations.of(context).tr('settings_language'), style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  AppLocalizations.of(context).tr('settings_language'),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -377,7 +414,8 @@ class _LanguageCard extends StatelessWidget {
                   code: lang.$1,
                   label: lang.$2,
                   selected: selected,
-                  onTap: () => context.read<LocaleProvider>().setLocale(lang.$1),
+                  onTap: () =>
+                      context.read<LocaleProvider>().setLocale(lang.$1),
                 ),
               );
             })),
@@ -503,7 +541,11 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context).tr('settings_current_password_wrong')),
+              content: Text(
+                AppLocalizations.of(
+                  context,
+                ).tr('settings_current_password_wrong'),
+              ),
               backgroundColor: AppColors.error,
             ),
           );
@@ -518,7 +560,9 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
         _confirmCtrl.clear();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context).tr('change_password_success')),
+            content: Text(
+              AppLocalizations.of(context).tr('change_password_success'),
+            ),
             backgroundColor: AppColors.success,
           ),
         );
@@ -539,7 +583,11 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
 
   bool _verifyCurrentPassword(String password) {
     final user = context.read<AuthProvider>().currentUser!;
-    return PasswordHasher.verify(password, user.passwordSalt, user.passwordHash);
+    return PasswordHasher.verify(
+      password,
+      user.passwordSalt,
+      user.passwordHash,
+    );
   }
 
   @override
@@ -552,9 +600,16 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
           children: [
             Row(
               children: [
-                const Icon(Icons.lock_reset_rounded, color: AppColors.primary, size: 20),
+                const Icon(
+                  Icons.lock_reset_rounded,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
-                Text(AppLocalizations.of(context).tr('settings_change_password'), style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  AppLocalizations.of(context).tr('settings_change_password'),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -566,12 +621,16 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
                     controller: _currentCtrl,
                     obscureText: !_currentVisible,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).tr('settings_current_password'),
+                      labelText: AppLocalizations.of(
+                        context,
+                      ).tr('settings_current_password'),
                       prefixIcon: const Icon(Icons.lock_outline, size: 20),
                       suffixIcon: IconButton(
-                        icon: Icon(_currentVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility),
+                        icon: Icon(
+                          _currentVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
                         onPressed: () =>
                             setState(() => _currentVisible = !_currentVisible),
                       ),
@@ -585,12 +644,14 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
                     controller: _newCtrl,
                     obscureText: !_newVisible,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).tr('settings_new_password'),
+                      labelText: AppLocalizations.of(
+                        context,
+                      ).tr('settings_new_password'),
                       prefixIcon: const Icon(Icons.lock_outline, size: 20),
                       suffixIcon: IconButton(
-                        icon: Icon(_newVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility),
+                        icon: Icon(
+                          _newVisible ? Icons.visibility_off : Icons.visibility,
+                        ),
                         onPressed: () =>
                             setState(() => _newVisible = !_newVisible),
                       ),
@@ -602,14 +663,18 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
                     controller: _confirmCtrl,
                     obscureText: !_confirmVisible,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).tr('settings_confirm_password'),
+                      labelText: AppLocalizations.of(
+                        context,
+                      ).tr('settings_confirm_password'),
                       prefixIcon: const Icon(Icons.lock_outline, size: 20),
                       suffixIcon: IconButton(
-                        icon: Icon(_confirmVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility),
-                        onPressed: () => setState(
-                            () => _confirmVisible = !_confirmVisible),
+                        icon: Icon(
+                          _confirmVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () =>
+                            setState(() => _confirmVisible = !_confirmVisible),
                       ),
                     ),
                     validator: (v) =>
@@ -629,7 +694,9 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
                                 color: Colors.white,
                               ),
                             )
-                          : Text(AppLocalizations.of(context).tr('settings_save')),
+                          : Text(
+                              AppLocalizations.of(context).tr('settings_save'),
+                            ),
                     ),
                   ),
                 ],
@@ -641,4 +708,3 @@ class _ChangePasswordCardState extends State<_ChangePasswordCard> {
     );
   }
 }
-

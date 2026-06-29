@@ -14,7 +14,9 @@ import '../features/stands/stand_5_screen.dart';
 import '../features/stands/stand_test_screen.dart';
 import '../features/stands/compressor_params_screen.dart';
 import '../features/stands/motor_params_unloaded_screen.dart';
-import '../features/stands/stand_unloaded_result_screen.dart';
+import '../features/stands/test/stand_test_unloaded_screen.dart';
+import '../data/models/motor_params.dart';
+import '../data/models/test_run.dart';
 import '../shared/providers/auth_provider.dart';
 
 /// Генератор маршрутов с guard-ами доступа
@@ -30,13 +32,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   }
 
   // Для защищённых маршрутов нужен guard — виджет-обёртка
-  return _fade(_AuthGuard(routeName: name ?? kRouteLogin), settings);
+  return _fade(
+    _AuthGuard(routeName: name ?? kRouteLogin, arguments: settings.arguments),
+    settings,
+  );
 }
 
 /// Guard: проверяет авторизацию прямо в дереве виджетов
 class _AuthGuard extends StatelessWidget {
   final String routeName;
-  const _AuthGuard({required this.routeName});
+  final Object? arguments;
+  const _AuthGuard({required this.routeName, this.arguments});
 
   @override
   Widget build(BuildContext context) {
@@ -88,17 +94,56 @@ class _AuthGuard extends StatelessWidget {
       kRouteStand4 => const Stand4Screen(),
       kRouteStand5 => const Stand5Screen(),
       kRouteStand5Compressor => const CompressorParamsScreen(),
-      kRouteStand1Loaded   => const StandTestScreen(standTitleKey: 'stand_1_title', testTypeKey: 'stand_test_loaded'),
-      kRouteStand2Loaded   => const StandTestScreen(standTitleKey: 'stand_2_title', testTypeKey: 'stand_test_loaded'),
-      kRouteStand3Loaded   => const StandTestScreen(standTitleKey: 'stand_3_title', testTypeKey: 'stand_test_loaded'),
-      kRouteStand1Unloaded => const MotorParamsUnloadedScreen(maxPowerKwt: kStand1MaxPowerKwt, standTitleKey: 'stand_1_title'),
-      kRouteStand2Unloaded => const MotorParamsUnloadedScreen(maxPowerKwt: kStand2MaxPowerKwt, standTitleKey: 'stand_2_title'),
-      kRouteStand3Unloaded => const MotorParamsUnloadedScreen(maxPowerKwt: kStand3MaxPowerKwt, standTitleKey: 'stand_3_title'),
-      kRouteStandUnloadedResult => const StandUnloadedResultScreen(),
+      kRouteStand1Loaded => const StandTestScreen(
+        standTitleKey: 'stand_1_title',
+        testTypeKey: 'stand_test_loaded',
+      ),
+      kRouteStand2Loaded => const StandTestScreen(
+        standTitleKey: 'stand_2_title',
+        testTypeKey: 'stand_test_loaded',
+      ),
+      kRouteStand3Loaded => const StandTestScreen(
+        standTitleKey: 'stand_3_title',
+        testTypeKey: 'stand_test_loaded',
+      ),
+      kRouteStand1Unloaded => const MotorParamsUnloadedScreen(
+        standId: 1,
+        maxPowerKwt: kStand1MaxPowerKwt,
+        standTitleKey: 'stand_1_title',
+      ),
+      kRouteStand2Unloaded => const MotorParamsUnloadedScreen(
+        standId: 2,
+        maxPowerKwt: kStand2MaxPowerKwt,
+        standTitleKey: 'stand_2_title',
+      ),
+      kRouteStand3Unloaded => const MotorParamsUnloadedScreen(
+        standId: 3,
+        maxPowerKwt: kStand3MaxPowerKwt,
+        standTitleKey: 'stand_3_title',
+      ),
+      kRouteStandUnloadedTest => _buildUnloadedTest(arguments),
       _ => const Scaffold(
         body: Center(child: Text('404 — страница не найдена')),
       ),
     };
+  }
+
+  /// Распаковывает аргументы маршрута теста «Без нагрузки».
+  /// Ожидает Map с ключами 'params' (MotorParams) и 'standId' (int).
+  /// Опциональный 'simulateFailure' (TestStatus) — отладочная авария фазы 1.
+  Widget _buildUnloadedTest(Object? args) {
+    if (args is Map &&
+        args['params'] is MotorParams &&
+        args['standId'] is int) {
+      return StandTestUnloadedScreen(
+        params: args['params'] as MotorParams,
+        standId: args['standId'] as int,
+        simulateFailure: args['simulateFailure'] as TestStatus?,
+      );
+    }
+    return const Scaffold(
+      body: Center(child: Text('404 — параметры теста не переданы')),
+    );
   }
 }
 

@@ -9,7 +9,10 @@ class PasswordHasher {
 
   /// Генерирует случайную соль в виде hex-строки
   static String generateSalt() {
-    final bytes = List<int>.generate(kPasswordSaltLength, (_) => _random.nextInt(256));
+    final bytes = List<int>.generate(
+      kPasswordSaltLength,
+      (_) => _random.nextInt(256),
+    );
     return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
   }
 

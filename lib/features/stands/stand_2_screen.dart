@@ -35,14 +35,11 @@ class _Stand2Body extends StatelessWidget {
           Text(
             loc.tr('stand_2_title'),
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 56,
-                ),
-          )
-              .animate()
-              .fadeIn(duration: 300.ms)
-              .slideY(begin: -0.1, end: 0),
+              color: primary,
+              fontWeight: FontWeight.bold,
+              fontSize: 56,
+            ),
+          ).animate().fadeIn(duration: 300.ms).slideY(begin: -0.1, end: 0),
 
           const SizedBox(height: kPaddingLarge * 2),
 
@@ -56,19 +53,23 @@ class _Stand2Body extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _TestTypeCard(
-                        image: 'assets/engin_test_type_image/middle_engin_power.png',
+                        image:
+                            'assets/engin_test_type_image/middle_engin_power.png',
                         label: loc.tr('stand_test_loaded'),
                         delay: 0,
-                        onTap: () => Navigator.pushNamed(context, kRouteStand2Loaded),
+                        onTap: () =>
+                            Navigator.pushNamed(context, kRouteStand2Loaded),
                       ),
                     ),
                     const SizedBox(width: kPaddingLarge),
                     Expanded(
                       child: _TestTypeCard(
-                        image: 'assets/engin_test_type_image/middle_engin_free.png',
+                        image:
+                            'assets/engin_test_type_image/middle_engin_free.png',
                         label: loc.tr('stand_test_unloaded'),
                         delay: 120,
-                        onTap: () => Navigator.pushNamed(context, kRouteStand2Unloaded),
+                        onTap: () =>
+                            Navigator.pushNamed(context, kRouteStand2Unloaded),
                       ),
                     ),
                   ],
@@ -116,91 +117,101 @@ class _TestTypeCardState extends State<_TestTypeCard> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          transform: Matrix4.translationValues(0, _hovered ? -6.0 : 0.0, 0),
-          decoration: BoxDecoration(
-            color: cardColor,
-            borderRadius: BorderRadius.circular(kCardRadius),
-            border: Border.all(
-              color: _hovered
-                  ? primary.withValues(alpha: 0.5)
-                  : primary.withValues(alpha: 0.12),
-              width: _hovered ? 1.5 : 1.0,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: shadowColor,
-                blurRadius: _hovered ? 20 : 8,
-                offset: Offset(0, _hovered ? 8 : 3),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(kPaddingLarge),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Изображение
-                Expanded(
-                  flex: 4,
-                  child: AnimatedScale(
-                    scale: _hovered ? 1.05 : 1.0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Image.asset(
-                      widget.image,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => Icon(
-                        Icons.electric_bolt_rounded,
-                        size: 48,
-                        color: primary,
-                      ),
-                    ),
+      child:
+          GestureDetector(
+                onTap: widget.onTap,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                  transform: Matrix4.translationValues(
+                    0,
+                    _hovered ? -6.0 : 0.0,
+                    0,
                   ),
-                ),
-
-                const SizedBox(height: kPaddingLarge),
-
-                // Разделитель
-                Container(
-                  height: 1,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        primary.withValues(alpha: 0.3),
-                        Colors.transparent,
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(kCardRadius),
+                    border: Border.all(
+                      color: _hovered
+                          ? primary.withValues(alpha: 0.5)
+                          : primary.withValues(alpha: 0.12),
+                      width: _hovered ? 1.5 : 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: shadowColor,
+                        blurRadius: _hovered ? 20 : 8,
+                        offset: Offset(0, _hovered ? 8 : 3),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(kPaddingLarge),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Изображение
+                        Expanded(
+                          flex: 4,
+                          child: AnimatedScale(
+                            scale: _hovered ? 1.05 : 1.0,
+                            duration: const Duration(milliseconds: 200),
+                            child: Image.asset(
+                              widget.image,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                    Icons.electric_bolt_rounded,
+                                    size: 48,
+                                    color: primary,
+                                  ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: kPaddingLarge),
+
+                        // Разделитель
+                        Container(
+                          height: 1,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                primary.withValues(alpha: 0.3),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: kPaddingLarge),
+
+                        // Подпись
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            widget.label,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
+                                  fontSize: 17,
+                                  color: primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-
-                const SizedBox(height: kPaddingLarge),
-
-                // Подпись
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    widget.label,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontSize: 17,
-                          color: primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      )
-          .animate()
-          .fadeIn(delay: Duration(milliseconds: widget.delay), duration: 350.ms)
-          .slideY(begin: 0.08, end: 0),
+              )
+              .animate()
+              .fadeIn(
+                delay: Duration(milliseconds: widget.delay),
+                duration: 350.ms,
+              )
+              .slideY(begin: 0.08, end: 0),
     );
   }
 }

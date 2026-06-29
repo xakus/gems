@@ -18,7 +18,7 @@ const String kAppVersion = '1.0.0';
 const String kDatabaseFileName = 'amotes.db';
 
 /// Текущая версия схемы БД (для миграций)
-const int kDatabaseVersion = 3;
+const int kDatabaseVersion = 4;
 
 // ─────────────────────────────────────────────
 //  Окно приложения
@@ -190,19 +190,19 @@ const String kRouteStand5 = '/stand-5';
 const String kRouteStand5Compressor = '/stand-5/compressor';
 
 /// Маршруты экранов тестирования стенда 1
-const String kRouteStand1Loaded   = '/stand-1/loaded';
+const String kRouteStand1Loaded = '/stand-1/loaded';
 const String kRouteStand1Unloaded = '/stand-1/unloaded';
 
 /// Маршруты экранов тестирования стенда 2
-const String kRouteStand2Loaded   = '/stand-2/loaded';
+const String kRouteStand2Loaded = '/stand-2/loaded';
 const String kRouteStand2Unloaded = '/stand-2/unloaded';
 
 /// Маршруты экранов тестирования стенда 3
-const String kRouteStand3Loaded   = '/stand-3/loaded';
+const String kRouteStand3Loaded = '/stand-3/loaded';
 const String kRouteStand3Unloaded = '/stand-3/unloaded';
 
-/// Маршрут экрана результатов после ввода параметров (режим «Без нагрузки»)
-const String kRouteStandUnloadedResult = '/stand/unloaded/result';
+/// Маршрут экрана процесса теста (режим «Без нагрузки»)
+const String kRouteStandUnloadedTest = '/stand/unloaded/test';
 
 // ─────────────────────────────────────────────
 //  Максимальная мощность стендов (кВт)
@@ -216,3 +216,63 @@ const double kStand2MaxPowerKwt = 170.0;
 
 /// Стенд 3 — двигатели до 170 кВт
 const double kStand3MaxPowerKwt = 170.0;
+
+// ─────────────────────────────────────────────
+//  Тест двигателя (режим «Без нагрузки»)
+// ─────────────────────────────────────────────
+
+/// Режим теста «Без нагрузки» (значение колонки test_mode)
+const String kTestModeUnloaded = 'unloaded';
+
+// Статусы запуска теста (колонка status в test_runs)
+const String kTestStatusRunning = 'running';
+const String kTestStatusPassed = 'passed';
+const String kTestStatusAborted = 'aborted';
+const String kTestStatusFailedInterturn = 'failed_interturn'; // КЗ межвитковое
+const String kTestStatusFailedBreak = 'failed_break'; // обрыв
+const String kTestStatusFailedHvBreakdown =
+    'failed_hv_breakdown'; // пробой по ВН
+const String kTestStatusFailedGround = 'failed_ground'; // КЗ на корпус
+
+// Метрики измерений (колонка metric в test_measurements)
+const String kMetricInsulation =
+    'insulation'; // мегаомметр (сопротивление изоляции)
+const String kMetricWinding = 'winding'; // микроомметр (сопротивление обмоток)
+const String kMetricVoltage = 'voltage';
+const String kMetricCurrent = 'current';
+const String kMetricPower = 'power';
+const String kMetricSpeed = 'speed';
+const String kMetricTemperature = 'temperature';
+
+// Типы событий теста (колонка event_type в test_events)
+const String kTestEventStart = 'start';
+const String kTestEventPhase1Ok = 'phase1_ok';
+const String kTestEventMeasurement = 'measurement';
+const String kTestEventError = 'error';
+const String kTestEventEmergencyStop = 'emergency_stop';
+const String kTestEventFinish = 'finish';
+
+// ─────────────────────────────────────────────
+//  Тайминги мок-ПЛС (мс) — пока реальная ПЛС не готова
+// ─────────────────────────────────────────────
+
+/// Задержка перед первыми показаниями омметров (приходят раньше остальных)
+const int kMockOmmeterStartDelayMs = 600;
+
+/// Интервал «капель» показаний омметров во время фазы 1
+const int kMockOmmeterTickMs = 350;
+
+/// Сколько длится фаза 1 (омметры) до выдачи результата
+const int kMockPhase1DurationMs = 3500;
+
+/// Задержка перед запуском метрик фазы 2 (после успеха омметров)
+const int kMockPhase2StartDelayMs = 700;
+
+/// Интервал обновления метрик фазы 2 (напряжение/ток/мощность/обороты/нагрев)
+const int kMockPhase2TickMs = 500;
+
+/// Ступенчатая задержка появления каждой следующей метрики фазы 2 (параллельно, но не разом)
+const int kMockMetricStaggerMs = 600;
+
+/// Сколько длится фаза 2 (снятие рабочих показателей) до завершения теста
+const int kMockPhase2DurationMs = 9000;

@@ -105,47 +105,57 @@ class _SplashScreenState extends State<SplashScreen> {
               // Название AMOTES: .animate() внутри Hero
               Hero(
                 tag: 'amotes_title',
-                child: Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    kAppName,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          fontSize: 52,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 6,
-                          foreground: Paint()
-                            ..shader = const LinearGradient(
-                              colors: [AppColors.primary, AppColors.accent],
-                            ).createShader(
-                              const Rect.fromLTWH(0, 0, 200, 60),
-                            ),
-                        ),
-                  ),
-                )
-                    .animate(delay: Duration(milliseconds: kSplashTitleDelayMs))
-                    .fadeIn(
-                      duration: Duration(
-                        milliseconds: kSplashLogoFadeDurationMs,
-                      ),
-                      curve: Curves.easeOut,
-                    )
-                    .slideY(begin: 0.3, end: 0),
+                child:
+                    Material(
+                          color: Colors.transparent,
+                          child: Text(
+                            kAppName,
+                            style: Theme.of(context).textTheme.headlineLarge
+                                ?.copyWith(
+                                  fontSize: 52,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 6,
+                                  foreground: Paint()
+                                    ..shader =
+                                        const LinearGradient(
+                                          colors: [
+                                            AppColors.primary,
+                                            AppColors.accent,
+                                          ],
+                                        ).createShader(
+                                          const Rect.fromLTWH(0, 0, 200, 60),
+                                        ),
+                                ),
+                          ),
+                        )
+                        .animate(
+                          delay: Duration(milliseconds: kSplashTitleDelayMs),
+                        )
+                        .fadeIn(
+                          duration: Duration(
+                            milliseconds: kSplashLogoFadeDurationMs,
+                          ),
+                          curve: Curves.easeOut,
+                        )
+                        .slideY(begin: 0.3, end: 0),
               ),
 
               const SizedBox(height: 12),
 
               // Подзаголовок (всегда на AZ)
               Text(
-                kAppFullName,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    kAppFullName,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: isDark
                           ? AppColors.darkSecondaryText
                           : AppColors.lightSecondaryText,
                       letterSpacing: 0.3,
                     ),
-              )
-                  .animate(delay: Duration(milliseconds: kSplashSubtitleDelayMs))
+                  )
+                  .animate(
+                    delay: Duration(milliseconds: kSplashSubtitleDelayMs),
+                  )
                   .fadeIn(
                     duration: Duration(milliseconds: kSplashLogoFadeDurationMs),
                     curve: Curves.easeOut,
@@ -156,21 +166,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
               // Индикатор загрузки
               SizedBox(
-                width: 40,
-                height: 3,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(2),
-                  child: LinearProgressIndicator(
-                    backgroundColor: (isDark
-                            ? AppColors.darkDivider
-                            : AppColors.lightDivider)
-                        .withValues(alpha: 0.4),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      AppColors.accent,
+                    width: 40,
+                    height: 3,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: LinearProgressIndicator(
+                        backgroundColor:
+                            (isDark
+                                    ? AppColors.darkDivider
+                                    : AppColors.lightDivider)
+                                .withValues(alpha: 0.4),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColors.accent,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
+                  )
                   .animate(
                     delay: Duration(milliseconds: kSplashSubtitleDelayMs + 200),
                   )
@@ -211,7 +222,10 @@ class _AdminFirstRunDialog extends StatelessWidget {
           const SizedBox(height: 4),
           _PasswordBox(text: kDefaultAdminUsername),
           const SizedBox(height: 12),
-          const Text('Временный пароль:', style: TextStyle(fontWeight: FontWeight.w600)),
+          const Text(
+            'Временный пароль:',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
           const SizedBox(height: 4),
           _PasswordBox(text: password),
           const SizedBox(height: 16),
@@ -220,11 +234,17 @@ class _AdminFirstRunDialog extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.warning.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
+              border: Border.all(
+                color: AppColors.warning.withValues(alpha: 0.4),
+              ),
             ),
             child: Row(
               children: const [
-                Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 18),
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: AppColors.warning,
+                  size: 18,
+                ),
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -265,7 +285,11 @@ class _PasswordBox extends StatelessWidget {
           Expanded(
             child: SelectableText(
               text,
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 15, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           IconButton(

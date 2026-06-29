@@ -10,7 +10,7 @@ class LocaleProvider extends ChangeNotifier {
   int? _currentUserId;
 
   LocaleProvider({SettingsRepository? settingsRepo})
-      : _settingsRepo = settingsRepo ?? SettingsRepository();
+    : _settingsRepo = settingsRepo ?? SettingsRepository();
 
   Locale get locale => _locale;
   String get languageCode => _locale.languageCode;

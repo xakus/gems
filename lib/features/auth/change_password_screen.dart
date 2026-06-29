@@ -42,10 +42,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: AppColors.error,
-        ),
+        SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
       );
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -55,8 +52,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDark;
-    final gradient =
-        isDark ? AppColors.splashGradientDark : AppColors.splashGradientLight;
+    final gradient = isDark
+        ? AppColors.splashGradientDark
+        : AppColors.splashGradientLight;
 
     final l10n = AppLocalizations.of(context);
 
@@ -73,24 +71,27 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 children: [
                   // Иконка
                   Container(
-                    width: 72,
-                    height: 72,
-                    decoration: BoxDecoration(
-                      gradient: AppColors.logoGradient,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                          blurRadius: 20,
+                        width: 72,
+                        height: 72,
+                        decoration: BoxDecoration(
+                          gradient: AppColors.logoGradient,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.3),
+                              blurRadius: 20,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.lock_reset_rounded,
-                      color: Colors.white,
-                      size: 36,
-                    ),
-                  ).animate().fadeIn(duration: 500.ms).scale(
+                        child: const Icon(
+                          Icons.lock_reset_rounded,
+                          color: Colors.white,
+                          size: 36,
+                        ),
+                      )
+                      .animate()
+                      .fadeIn(duration: 500.ms)
+                      .scale(
                         begin: const Offset(0.7, 0.7),
                         curve: Curves.elasticOut,
                       ),
@@ -108,101 +109,116 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     l10n.tr('change_password_subtitle'),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: isDark
-                              ? AppColors.darkSecondaryText
-                              : AppColors.lightSecondaryText,
-                        ),
+                      color: isDark
+                          ? AppColors.darkSecondaryText
+                          : AppColors.lightSecondaryText,
+                    ),
                   ).animate(delay: 150.ms).fadeIn(),
 
                   const SizedBox(height: 32),
 
                   Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(kPaddingLarge),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // Новый пароль
-                            TextFormField(
-                              controller: _newPasswordCtrl,
-                              obscureText: !_newVisible,
-                              decoration: InputDecoration(
-                                labelText: l10n.tr('change_password_new'),
-                                prefixIcon: const Icon(Icons.lock_outline),
-                                suffixIcon: IconButton(
-                                  icon: Icon(_newVisible
-                                      ? Icons.visibility_off
-                                      : Icons.visibility),
-                                  onPressed: () =>
-                                      setState(() => _newVisible = !_newVisible),
+                        child: Padding(
+                          padding: const EdgeInsets.all(kPaddingLarge),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                // Новый пароль
+                                TextFormField(
+                                  controller: _newPasswordCtrl,
+                                  obscureText: !_newVisible,
+                                  decoration: InputDecoration(
+                                    labelText: l10n.tr('change_password_new'),
+                                    prefixIcon: const Icon(Icons.lock_outline),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _newVisible
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
+                                      onPressed: () => setState(
+                                        () => _newVisible = !_newVisible,
+                                      ),
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  validator: Validators.password,
+                                  onChanged: (_) => setState(() {}),
                                 ),
-                              ),
-                              textInputAction: TextInputAction.next,
-                              validator: Validators.password,
-                              onChanged: (_) => setState(() {}),
-                            ),
 
-                            // Индикатор надёжности
-                            if (_newPasswordCtrl.text.isNotEmpty) ...[
-                              const SizedBox(height: 8),
-                              _PasswordStrengthBar(password: _newPasswordCtrl.text),
-                            ],
+                                // Индикатор надёжности
+                                if (_newPasswordCtrl.text.isNotEmpty) ...[
+                                  const SizedBox(height: 8),
+                                  _PasswordStrengthBar(
+                                    password: _newPasswordCtrl.text,
+                                  ),
+                                ],
 
-                            const SizedBox(height: 16),
+                                const SizedBox(height: 16),
 
-                            // Подтверждение
-                            TextFormField(
-                              controller: _confirmCtrl,
-                              obscureText: !_confirmVisible,
-                              decoration: InputDecoration(
-                                labelText: l10n.tr('change_password_confirm'),
-                                prefixIcon: const Icon(Icons.lock_outline),
-                                suffixIcon: IconButton(
-                                  icon: Icon(_confirmVisible
-                                      ? Icons.visibility_off
-                                      : Icons.visibility),
-                                  onPressed: () => setState(
-                                      () => _confirmVisible = !_confirmVisible),
+                                // Подтверждение
+                                TextFormField(
+                                  controller: _confirmCtrl,
+                                  obscureText: !_confirmVisible,
+                                  decoration: InputDecoration(
+                                    labelText: l10n.tr(
+                                      'change_password_confirm',
+                                    ),
+                                    prefixIcon: const Icon(Icons.lock_outline),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _confirmVisible
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
+                                      onPressed: () => setState(
+                                        () =>
+                                            _confirmVisible = !_confirmVisible,
+                                      ),
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.done,
+                                  validator: (v) => Validators.passwordConfirm(
+                                    v,
+                                    _newPasswordCtrl.text,
+                                  ),
+                                  onFieldSubmitted: (_) => _submit(),
                                 ),
-                              ),
-                              textInputAction: TextInputAction.done,
-                              validator: (v) => Validators.passwordConfirm(
-                                  v, _newPasswordCtrl.text),
-                              onFieldSubmitted: (_) => _submit(),
+
+                                const SizedBox(height: 12),
+
+                                // Требования
+                                _PasswordRequirements(
+                                  password: _newPasswordCtrl.text,
+                                ),
+
+                                const SizedBox(height: 24),
+
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: _loading ? null : _submit,
+                                    child: _loading
+                                        ? const SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : Text(
+                                            l10n.tr('change_password_button'),
+                                          ),
+                                  ),
+                                ),
+                              ],
                             ),
-
-                            const SizedBox(height: 12),
-
-                            // Требования
-                            _PasswordRequirements(
-                              password: _newPasswordCtrl.text,
-                            ),
-
-                            const SizedBox(height: 24),
-
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: _loading ? null : _submit,
-                                child: _loading
-                                    ? const SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Text(l10n.tr('change_password_button')),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  )
+                      )
                       .animate(delay: 200.ms)
                       .fadeIn(duration: 400.ms)
                       .slideY(begin: 0.1, end: 0),
@@ -237,18 +253,18 @@ class _PasswordStrengthBar extends StatelessWidget {
     final color = s <= 1
         ? AppColors.error
         : s <= 2
-            ? AppColors.warning
-            : s <= 3
-                ? AppColors.info
-                : AppColors.success;
+        ? AppColors.warning
+        : s <= 3
+        ? AppColors.info
+        : AppColors.success;
     final l10n = AppLocalizations.of(context);
     final label = s <= 1
         ? l10n.tr('password_strength_weak')
         : s <= 2
-            ? l10n.tr('password_strength_fair')
-            : s <= 3
-                ? l10n.tr('password_strength_good')
-                : l10n.tr('password_strength_strong');
+        ? l10n.tr('password_strength_fair')
+        : s <= 3
+        ? l10n.tr('password_strength_good')
+        : l10n.tr('password_strength_strong');
 
     return Row(
       children: [
@@ -264,7 +280,14 @@ class _PasswordStrengthBar extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Text(label, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: color,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -285,7 +308,10 @@ class _PasswordRequirements extends StatelessWidget {
       children: [
         _Req(
           met: hasLength,
-          text: l10n.tr('validation_min_length', args: {'min': '$kPasswordMinLength'}),
+          text: l10n.tr(
+            'validation_min_length',
+            args: {'min': '$kPasswordMinLength'},
+          ),
         ),
         const SizedBox(height: 4),
         _Req(met: hasDigit, text: l10n.tr('validation_password_digit')),
