@@ -65,6 +65,8 @@
   "metric_power": "Мощность",
   "metric_speed": "Обороты",
   "metric_temperature": "Нагрев",
+  "metric_frequency": "Частота",
+  "test_nominal_label": "Задано",
 
   "test_phase1_title": "Проверка изоляции и обмоток",
   "test_phase2_waiting": "Запуск измерений…",
@@ -81,6 +83,10 @@
   "test_error_ground": "Короткое замыкание на корпус",
   "test_error_unknown": "Неизвестная неисправность",
   "test_debug_failure_mode": "Режим проверки аварии",
+  "test_check_interturn": "Межвитковое замыкание",
+  "test_check_break": "Обрыв обмотки",
+  "test_check_hv": "Пробой изоляции (ВН)",
+  "test_check_ground": "Замыкание на корпус",
 
   "header_settings": "Настройки",
   "header_logout": "Выйти",

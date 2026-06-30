@@ -129,12 +129,14 @@ class DatabaseHelper {
       )
     ''');
 
-    // Измерения (тайм-серия) — для графиков и отчётов
+    // Измерения (тайм-серия) — для графиков и отчётов.
+    // phase: 1/2/3 для трёхфазных метрик (напряжение, ток), 0 — однофазные.
     await db.execute('''
       CREATE TABLE test_measurements (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
         run_id      INTEGER NOT NULL REFERENCES test_runs(id) ON DELETE CASCADE,
         metric      TEXT    NOT NULL,
+        phase       INTEGER NOT NULL DEFAULT 0,
         value       REAL    NOT NULL,
         unit        TEXT    NOT NULL,
         recorded_at TEXT    NOT NULL
@@ -192,6 +194,13 @@ class DatabaseHelper {
     // v3 → v4: таблицы модуля тестирования двигателей
     if (oldVersion < 4) {
       await _createTestTables(db);
+    }
+
+    // v4 → v5: фаза измерения (трёхфазные напряжение/ток)
+    if (oldVersion < 5) {
+      await db.execute(
+        'ALTER TABLE test_measurements ADD COLUMN phase INTEGER NOT NULL DEFAULT 0',
+      );
     }
 
     await db.insert('app_meta', {

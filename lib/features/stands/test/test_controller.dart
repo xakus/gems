@@ -59,13 +59,25 @@ class TestController extends ChangeNotifier {
   String? errorCode;
 
   /// Последние значения метрик фазы 2
-  final Map<MetricType, double> current = {};
+  /// Последние значения по метрике и фазе (phase 0 — однофазные)
+  final Map<MetricType, Map<int, double>> current = {};
 
-  /// История значений для графиков (по метрикам)
-  final Map<MetricType, List<double>> series = {};
+  /// История значений для графиков по метрике и фазе
+  final Map<MetricType, Map<int, List<double>>> series = {};
 
   /// Порядок появления метрик — для поочерёдной анимации карточек
   final List<MetricType> activeMetrics = [];
+
+  /// Заданные перед стартом номиналы (для горизонтальных линий и подписи «задано»).
+  /// null — у метрики нет введённого значения (нагрев).
+  late final Map<MetricType, double?> targets = {
+    MetricType.voltage: params.voltageV,
+    MetricType.current: params.currentA,
+    MetricType.power: params.powerKwt,
+    MetricType.speed: params.speedRpm,
+    MetricType.frequency: params.frequencyHz,
+    MetricType.temperature: null,
+  };
 
   /// Тест ещё идёт → выход назад заблокирован (п.6 ТЗ)
   bool get isRunning =>
@@ -118,11 +130,11 @@ class TestController extends ChangeNotifier {
         activeMetrics.add(metric);
         if (_phase == TestPhase.phase1Done) _phase = TestPhase.phase2;
       }
-      current[metric] = r.value;
-      (series[metric] ??= []).add(r.value);
+      (current[metric] ??= {})[r.phase] = r.value;
+      ((series[metric] ??= {})[r.phase] ??= []).add(r.value);
     }
 
-    _record(metric, r.value, r.at);
+    _record(metric, r.phase, r.value, r.at);
     notifyListeners();
   }
 
@@ -162,13 +174,14 @@ class TestController extends ChangeNotifier {
 
   // ── Запись в БД ──────────────────────────────────────────────────────────
 
-  void _record(MetricType metric, double value, DateTime at) {
+  void _record(MetricType metric, int phase, double value, DateTime at) {
     final runId = _runId;
     if (runId == null) return;
     _repo.addMeasurement(
       TestMeasurement(
         runId: runId,
         metric: metric,
+        phase: phase,
         value: value,
         unit: metric.unitKey,
         recordedAt: at,

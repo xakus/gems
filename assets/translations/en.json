@@ -65,6 +65,8 @@
   "metric_power": "Power",
   "metric_speed": "Speed",
   "metric_temperature": "Temperature",
+  "metric_frequency": "Frequency",
+  "test_nominal_label": "Set",
 
   "test_phase1_title": "Insulation and winding check",
   "test_phase2_waiting": "Starting measurements…",
@@ -81,6 +83,10 @@
   "test_error_ground": "Short circuit to housing",
   "test_error_unknown": "Unknown fault",
   "test_debug_failure_mode": "Fault-check mode",
+  "test_check_interturn": "Inter-turn short circuit",
+  "test_check_break": "Winding break",
+  "test_check_hv": "Insulation breakdown (HV)",
+  "test_check_ground": "Short to housing",
 
   "header_settings": "Settings",
   "header_logout": "Logout",

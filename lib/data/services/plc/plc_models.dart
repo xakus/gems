@@ -9,12 +9,15 @@ sealed class PlcEvent {
 }
 
 /// Очередное показание измерителя (омметры фазы 1 или метрики фазы 2).
+/// [phase] — 1/2/3 для трёхфазных метрик (напряжение/ток), 0 — однофазные.
 class PlcReading extends PlcEvent {
   final MetricType metric;
+  final int phase;
   final double value;
 
   const PlcReading({
     required this.metric,
+    this.phase = 0,
     required this.value,
     required DateTime at,
   }) : super(at);

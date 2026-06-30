@@ -65,6 +65,8 @@
   "metric_power": "Güc",
   "metric_speed": "Dövrlər",
   "metric_temperature": "Qızma",
+  "metric_frequency": "Tezlik",
+  "test_nominal_label": "Təyin",
 
   "test_phase1_title": "İzolyasiya və sarğının yoxlanışı",
   "test_phase2_waiting": "Ölçmələr başlayır…",
@@ -81,6 +83,10 @@
   "test_error_ground": "Gövdəyə qısa qapanma",
   "test_error_unknown": "Naməlum nasazlıq",
   "test_debug_failure_mode": "Nasazlıq yoxlama rejimi",
+  "test_check_interturn": "Sarğılararası qapanma",
+  "test_check_break": "Sarğının qırılması",
+  "test_check_hv": "İzolyasiya deşilməsi (YG)",
+  "test_check_ground": "Gövdəyə qapanma",
 
   "header_settings": "Parametrlər",
   "header_logout": "Çıxış",

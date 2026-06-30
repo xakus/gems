@@ -42,6 +42,9 @@ class StandTestUnloadedScreen extends StatefulWidget {
 class _StandTestUnloadedScreenState extends State<StandTestUnloadedScreen> {
   late final TestController _controller;
 
+  /// Общий индекс наведения для синхронного crosshair по всем графикам
+  final ValueNotifier<int?> _hover = ValueNotifier(null);
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +63,7 @@ class _StandTestUnloadedScreenState extends State<StandTestUnloadedScreen> {
 
   @override
   void dispose() {
+    _hover.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -174,25 +178,50 @@ class _StandTestUnloadedScreenState extends State<StandTestUnloadedScreen> {
       );
     }
 
-    return SingleChildScrollView(
-      child: Center(
-        child: Wrap(
-          spacing: kPaddingLarge,
-          runSpacing: kPaddingLarge,
+    // Адаптивная сетка: заполняет экран без пустот; на узких/низких — прокрутка
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final count = c.activeMetrics.length;
+        const spacing = kPaddingLarge;
+
+        // Колонки по ширине: до 3 на широком мониторе (1920), меньше — на узких
+        var cols = (constraints.maxWidth / kMetricCardMinWidth).floor();
+        cols = cols.clamp(1, 3);
+        if (cols > count) cols = count;
+        final rows = (count / cols).ceil();
+
+        final cardW = (constraints.maxWidth - spacing * (cols - 1)) / cols;
+        final fitH = (constraints.maxHeight - spacing * (rows - 1)) / rows;
+        // Если по высоте влезает — растягиваем (без пустот), иначе фикс + скролл
+        final fill = fitH >= kMetricCardMinHeight;
+        final cardH = fill ? fitH : kMetricCardMinHeight;
+
+        final grid = Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
           alignment: WrapAlignment.center,
           children: [
             for (final metric in c.activeMetrics)
-              MetricCard(
-                key: ValueKey(metric),
-                titleKey: metric.titleKey,
-                unitKey: metric.unitKey,
-                value: c.current[metric] ?? 0,
-                series: c.series[metric] ?? const [],
-                accent: _metricColor(metric),
+              SizedBox(
+                width: cardW,
+                height: cardH,
+                child: MetricCard(
+                  key: ValueKey(metric),
+                  titleKey: metric.titleKey,
+                  unitKey: metric.unitKey,
+                  isThreePhase: metric.isThreePhase,
+                  series: c.series[metric] ?? const {},
+                  current: c.current[metric] ?? const {},
+                  target: c.targets[metric],
+                  accent: _metricColor(metric),
+                  hover: _hover,
+                ),
               ),
           ],
-        ),
-      ),
+        );
+
+        return fill ? Center(child: grid) : SingleChildScrollView(child: grid);
+      },
     );
   }
 
@@ -269,6 +298,7 @@ class _StandTestUnloadedScreenState extends State<StandTestUnloadedScreen> {
     MetricType.power => AppColors.info,
     MetricType.speed => AppColors.success,
     MetricType.temperature => AppColors.warning,
+    MetricType.frequency => AppColors.accentDark,
     _ => AppColors.primary,
   };
 }

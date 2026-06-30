@@ -87,20 +87,56 @@ class MockPlcDataSource implements PlcDataSource {
   // ── Фаза 2: рабочие показатели ──────────────────────────────────────────────
 
   void _runPhase2(MotorParams params) {
-    // Целевые значения метрик и их «появление» с разной задержкой
-    final metrics = <MetricType, double>{
+    // Целевые значения метрик. Порядок = порядок появления карточек.
+    // Сначала трёхфазные (напряжение/ток), затем однофазные.
+    final triple = <MetricType, double>{
       MetricType.voltage: params.voltageV,
       MetricType.current: params.currentA,
+    };
+    final single = <MetricType, double>{
       MetricType.power: params.powerKwt,
       MetricType.speed: params.speedRpm,
       MetricType.temperature: 60, // нагрев растёт от комнатной до ~60 °C
+      MetricType.frequency: params.frequencyHz,
     };
 
+    // Лёгкий дисбаланс по фазам (реальные фазы немного отличаются)
+    const phaseFactor = [1.0, 0.98, 1.015];
+
     var stagger = kMockPhase2StartDelayMs;
-    for (final entry in metrics.entries) {
+
+    // Трёхфазные: на каждый тик эмитим показание по 3 фазам
+    for (final entry in triple.entries) {
       final metric = entry.key;
       final target = entry.value;
-      // Каждая метрика начинает обновляться со своей задержкой (параллельно, но не разом)
+      _addPeriodic(
+        delay: stagger,
+        period: kMockPhase2TickMs,
+        until: kMockPhase2DurationMs,
+        onTick: (progress) {
+          for (var ph = 1; ph <= kMotorPhaseCount; ph++) {
+            _emit(
+              PlcReading(
+                metric: metric,
+                phase: ph,
+                value: _approach(
+                  metric,
+                  target * phaseFactor[ph - 1],
+                  progress,
+                ),
+                at: DateTime.now(),
+              ),
+            );
+          }
+        },
+      );
+      stagger += kMockMetricStaggerMs;
+    }
+
+    // Однофазные метрики
+    for (final entry in single.entries) {
+      final metric = entry.key;
+      final target = entry.value;
       _addPeriodic(
         delay: stagger,
         period: kMockPhase2TickMs,
@@ -118,8 +154,8 @@ class MockPlcDataSource implements PlcDataSource {
       stagger += kMockMetricStaggerMs;
     }
 
-    // Завершение теста
-    _addOnce(kMockPhase2DurationMs + kMockPhase2StartDelayMs, () {
+    // Завершение теста — после того как «оживёт» и отработает последняя метрика
+    _addOnce(stagger + kMockPhase2DurationMs, () {
       _emit(PlcTestFinished(at: DateTime.now()));
     });
   }

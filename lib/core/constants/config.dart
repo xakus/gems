@@ -18,7 +18,7 @@ const String kAppVersion = '1.0.0';
 const String kDatabaseFileName = 'amotes.db';
 
 /// Текущая версия схемы БД (для миграций)
-const int kDatabaseVersion = 4;
+const int kDatabaseVersion = 5;
 
 // ─────────────────────────────────────────────
 //  Окно приложения
@@ -243,6 +243,23 @@ const String kMetricCurrent = 'current';
 const String kMetricPower = 'power';
 const String kMetricSpeed = 'speed';
 const String kMetricTemperature = 'temperature';
+const String kMetricFrequency = 'frequency';
+
+/// Количество фаз трёхфазного двигателя (напряжение/ток)
+const int kMotorPhaseCount = 3;
+
+/// Минимальная ширина карточки метрики (для расчёта числа колонок сетки)
+const double kMetricCardMinWidth = 460;
+
+/// Минимальная высота карточки метрики (ниже — включается прокрутка)
+const double kMetricCardMinHeight = 260;
+
+/// Сколько последних точек показывать на live-графике (скользящее окно —
+/// чтобы линия плавно «бежала», а не сжималась по мере накопления данных)
+const int kChartWindowPoints = 60;
+
+/// Подписи фаз трёхфазного двигателя (U/V/W)
+const List<String> kPhaseLabels = ['U', 'V', 'W'];
 
 // Типы событий теста (колонка event_type в test_events)
 const String kTestEventStart = 'start';
@@ -263,7 +280,7 @@ const int kMockOmmeterStartDelayMs = 600;
 const int kMockOmmeterTickMs = 350;
 
 /// Сколько длится фаза 1 (омметры) до выдачи результата
-const int kMockPhase1DurationMs = 3500;
+const int kMockPhase1DurationMs = 9000;
 
 /// Задержка перед запуском метрик фазы 2 (после успеха омметров)
 const int kMockPhase2StartDelayMs = 700;
@@ -275,4 +292,4 @@ const int kMockPhase2TickMs = 500;
 const int kMockMetricStaggerMs = 600;
 
 /// Сколько длится фаза 2 (снятие рабочих показателей) до завершения теста
-const int kMockPhase2DurationMs = 9000;
+const int kMockPhase2DurationMs = 19000;

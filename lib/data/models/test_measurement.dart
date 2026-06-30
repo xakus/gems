@@ -5,11 +5,12 @@ import '../../core/constants/config.dart';
 enum MetricType {
   insulation, // мегаомметр — сопротивление изоляции
   winding, // микроомметр — сопротивление обмоток
-  voltage,
-  current,
+  voltage, // трёхфазное
+  current, // трёхфазное
   power,
   speed,
-  temperature;
+  temperature,
+  frequency;
 
   String toDbString() => switch (this) {
     MetricType.insulation => kMetricInsulation,
@@ -19,6 +20,7 @@ enum MetricType {
     MetricType.power => kMetricPower,
     MetricType.speed => kMetricSpeed,
     MetricType.temperature => kMetricTemperature,
+    MetricType.frequency => kMetricFrequency,
   };
 
   static MetricType fromString(String s) => switch (s) {
@@ -29,8 +31,13 @@ enum MetricType {
     kMetricPower => MetricType.power,
     kMetricSpeed => MetricType.speed,
     kMetricTemperature => MetricType.temperature,
+    kMetricFrequency => MetricType.frequency,
     _ => MetricType.voltage,
   };
+
+  /// Трёхфазная метрика (напряжение/ток) — измеряется по 3 фазам
+  bool get isThreePhase =>
+      this == MetricType.voltage || this == MetricType.current;
 
   /// Ключ локализации названия метрики
   String get titleKey => 'metric_$name';
@@ -44,6 +51,7 @@ enum MetricType {
     MetricType.power => 'unit_kwt',
     MetricType.speed => 'unit_rpm',
     MetricType.temperature => 'unit_celsius',
+    MetricType.frequency => 'unit_hz',
   };
 }
 
@@ -52,6 +60,9 @@ class TestMeasurement {
   final int? id;
   final int runId;
   final MetricType metric;
+
+  /// Фаза: 1/2/3 для трёхфазных метрик, 0 — однофазные
+  final int phase;
   final double value;
 
   /// Снимок единицы измерения на момент записи
@@ -62,6 +73,7 @@ class TestMeasurement {
     this.id,
     required this.runId,
     required this.metric,
+    this.phase = 0,
     required this.value,
     required this.unit,
     required this.recordedAt,
@@ -72,6 +84,7 @@ class TestMeasurement {
       id: map['id'] as int?,
       runId: map['run_id'] as int,
       metric: MetricType.fromString(map['metric'] as String),
+      phase: (map['phase'] as int?) ?? 0,
       value: (map['value'] as num).toDouble(),
       unit: map['unit'] as String,
       recordedAt: DateTime.parse(map['recorded_at'] as String),
@@ -83,6 +96,7 @@ class TestMeasurement {
       if (id != null) 'id': id,
       'run_id': runId,
       'metric': metric.toDbString(),
+      'phase': phase,
       'value': value,
       'unit': unit,
       'recorded_at': recordedAt.toIso8601String(),
